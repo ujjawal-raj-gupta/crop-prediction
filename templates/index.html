@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Crop Advisor</title>
+
+    <!-- Bootstrap (CDN) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark topbar">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-semibold" href="/">Smart Crop Advisor</a>
+        <div class="d-flex gap-2 align-items-center">
+          <span class="topbar-pill">Secure</span>
+          <span class="topbar-pill">Bihar-focused</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-4">
+      <!-- Summary cards row -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <div class="card summary-card">
+            <div class="card-body">
+              <div class="summary-label">Model</div>
+              <div class="summary-value">Random Forest</div>
+              <div class="summary-sub">Trained on crop_data.csv</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card summary-card">
+            <div class="card-body">
+              <div class="summary-label">Weather</div>
+              <div class="summary-value">{{ "%.1f"|format(temperature) }}°C · {{ "%.0f"|format(humidity) }}%</div>
+              <div class="summary-sub">
+                City: {{ city }}
+                {% if used_fallback %}
+                  <span class="ms-2 text-warning-emphasis">(fallback)</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card summary-card">
+            <div class="card-body">
+              <div class="summary-label">Market dataset</div>
+              <div class="summary-value">Enabled</div>
+              <div class="summary-sub">data/market_demand.csv</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if errors and errors|length > 0 %}
+        <div class="alert alert-danger">
+          <div class="fw-semibold mb-1">Fix these issues:</div>
+          <ul class="mb-0">
+            {% for e in errors %}
+              <li>{{ e }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="row g-3">
+        <!-- Left: Form -->
+        <div class="col-lg-7">
+          <div class="card panel-card">
+            <div class="card-header panel-header">Farmer Information & Farm Details</div>
+            <div class="card-body">
+              <form method="post" action="/predict">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">City / District</label>
+                    <input class="form-control" name="city" value="{{ city }}" placeholder="e.g., Patna" />
+                    <div class="form-text">Used to auto-fetch temperature & humidity.</div>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-end">
+                    <button class="btn btn-outline-primary w-100" name="fetch_weather" value="1" type="submit">
+                      Fetch Weather
+                    </button>
+                  </div>
+
+                  <div class="col-12"><hr class="my-1" /></div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Nitrogen (N)</label>
+                    <input class="form-control" name="n" value="{{ n if n is defined else 90 }}" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Phosphorus (P)</label>
+                    <input class="form-control" name="p" value="{{ p if p is defined else 42 }}" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Potassium (K)</label>
+                    <input class="form-control" name="k" value="{{ k if k is defined else 43 }}" />
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Temperature (°C)</label>
+                    <input class="form-control" name="temperature" value="{{ temperature }}" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Humidity (%)</label>
+                    <input class="form-control" name="humidity" value="{{ humidity }}" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Rainfall (mm)</label>
+                    <input class="form-control" name="rainfall" value="{{ rainfall if rainfall is defined else 200 }}" />
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">pH</label>
+                    <input class="form-control" name="ph" value="{{ ph if ph is defined else 6.5 }}" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Soil type</label>
+                    <select class="form-select" name="soil_type">
+                      {% set selected = soil_type if soil_type is defined else "alluvial" %}
+                      {% for opt in ["alluvial","loamy","clay","sandy"] %}
+                        <option value="{{ opt }}" {% if opt == selected %}selected{% endif %}>{{ opt|capitalize }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Organic matter</label>
+                    <input class="form-control" name="organic_matter" value="{{ organic_matter if organic_matter is defined else 2.0 }}" />
+                    <div class="form-text">Typical range in our dataset: ~0.5–5.0</div>
+                  </div>
+
+                  <div class="col-12"><hr class="my-1" /></div>
+
+                  <div class="col-md-7">
+                    <label class="form-label">Phone number for SMS alerts (optional)</label>
+                    <input class="form-control" name="to_number" value="{{ to_number if to_number is defined else '' }}" placeholder="+91XXXXXXXXXX" />
+                    <div class="form-text">Use E.164 format (example: +919876543210).</div>
+                  </div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="1" id="sms_enabled" name="sms_enabled" {% if sms_enabled %}checked{% endif %}>
+                      <label class="form-check-label" for="sms_enabled">
+                        Schedule SMS reminders
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-grid mt-4">
+                  <button class="btn btn-success btn-lg" type="submit">Predict & Generate Recommendation</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Result -->
+        <div class="col-lg-5">
+          <div class="card panel-card">
+            <div class="card-header panel-header-green">Credit Assessment Result (Crop Recommendation)</div>
+            <div class="card-body">
+              {% if result %}
+                <div class="text-center mb-3">
+                  <div class="result-title">Recommended Crop</div>
+                  <div class="result-crop">{{ result }}</div>
+                </div>
+
+                {% if confidence is not none %}
+                  {% set pct = (confidence * 100) | round(0) | int %}
+                  <div class="mb-2 d-flex justify-content-between">
+                    <div class="fw-semibold">Confidence</div>
+                    <div class="fw-semibold">{{ pct }}%</div>
+                  </div>
+                  <div class="progress mb-3" style="height: 12px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ pct }}%"></div>
+                  </div>
+                {% endif %}
+
+                <div class="market-box">
+                  <div class="market-title">Market Insights</div>
+                  {% if market %}
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <span class="badge-pill {{ demand_badge[1] }}">{{ demand_badge[0] }}</span>
+                      <span class="text-muted small">Demand level</span>
+                    </div>
+                    <div class="market-row"><span>Price per kg</span><strong>{{ market.price_per_kg }}</strong></div>
+                    <div class="market-row"><span>Buyer type</span><strong>{{ market.buyer_type }}</strong></div>
+                    <div class="market-row"><span>Buyer location</span><strong>{{ market.buyer_location }}</strong></div>
+                  {% else %}
+                    <div class="text-muted">No market record found for this crop.</div>
+                  {% endif %}
+                </div>
+
+                {% if irrigation_plan %}
+                  <div class="market-box mt-3">
+                    <div class="market-title">Irrigation plan (timings)</div>
+                    <div class="text-muted small mb-2">Scheduled in IST (Asia/Kolkata).</div>
+                    <div class="table-responsive">
+                      <table class="table table-sm align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th>When</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for ev in irrigation_plan %}
+                            <tr>
+                              <td class="text-nowrap">{{ ev.when_local }}</td>
+                              <td>{{ ev.note }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if sms_message %}
+                  <div class="alert alert-success mt-3 mb-0">{{ sms_message }}</div>
+                {% endif %}
+
+                {% if recent_sms %}
+                  <div class="market-box mt-3">
+                    <div class="market-title">Recent SMS jobs</div>
+                    <div class="table-responsive">
+                      <table class="table table-sm align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Status</th>
+                            <th>When (UTC)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for j in recent_sms %}
+                            <tr>
+                              <td>{{ j.id }}</td>
+                              <td>{{ j.status }}</td>
+                              <td class="text-nowrap">{{ j.when_utc }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                {% endif %}
+              {% else %}
+                <div class="text-center text-muted py-5">
+                  <div class="mb-2">Awaiting Assessment</div>
+                  <div class="small">Fill the form and click “Predict & Generate Recommendation”.</div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="small text-muted mt-2">
+            Note: Weather uses Open‑Meteo (no API key). Rainfall is manual input.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
+

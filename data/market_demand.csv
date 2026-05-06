@@ -1,0 +1,23 @@
+crop,demand_level,price_per_kg,buyer_type,buyer_location
+rice,Medium,22,Government procurement (MSP),All districts Bihar
+maize,High,18,Poultry feed industry,Muzaffarpur and Patna
+chickpea,Medium,65,Dal mills and traders,Patna
+lentil,Medium,70,Dal mills,Patna and Mokama
+jute,Low,30,Jute mills,Purnea and Katihar
+banana,High,25,Fruit wholesalers,Patna and Hajipur
+mango,High,40,Fruit traders,Muzaffarpur and Bhagalpur
+pomegranate,Medium,80,Premium fruit traders,Urban Bihar markets
+watermelon,Medium,15,Seasonal fruit traders,Local mandis
+cotton,Low,60,Textile traders,Outside Bihar markets
+blackgram,Medium,75,Dal mills,Bihar markets
+mungbean,Medium,85,Pulse traders,Patna
+pigeonpeas,Medium,68,Dal mills and traders,Bihar markets
+mothbeans,Low,50,Local traders,Limited Bihar markets
+kidneybeans,Medium,90,Urban wholesale markets,Patna
+coffee,Low,120,Specialty traders,Outside Bihar markets
+coconut,Low,35,Wholesale traders,Imported supply chains
+grapes,Medium,60,Fruit wholesalers,Urban Bihar markets
+apple,Medium,120,Cold storage traders,Urban Bihar markets
+orange,Medium,50,Fruit traders,Bihar markets
+papaya,High,20,Local fruit vendors,Patna and nearby towns
+muskmelon,Medium,18,Seasonal traders,Local mandis

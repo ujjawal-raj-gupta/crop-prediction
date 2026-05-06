@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: smart-crop-advisor-web
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python train_model.py
+    startCommand: gunicorn web_app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_PATH
+        value: /var/data/smart_crop.db
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+    disk:
+      name: smart-crop-data
+      mountPath: /var/data
+      sizeGB: 1
+
+  - type: worker
+    name: smart-crop-advisor-worker
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python train_model.py
+    startCommand: python sms_worker.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_PATH
+        value: /var/data/smart_crop.db
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+    disk:
+      name: smart-crop-data
+      mountPath: /var/data
+      sizeGB: 1
+
