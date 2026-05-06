@@ -22,11 +22,16 @@ from pathlib import Path
 import joblib
 import pandas as pd
 import requests
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 
-from db import enqueue_sms_jobs, init_db, list_recent_jobs
+from db import (
+    enqueue_sms_jobs,
+    fetch_due_pending_jobs_for_client,
+    init_db,
+    list_recent_jobs_for_client,
+    mark_job_sent,
+)
 from irrigation_plan import build_irrigation_plan
-from sms_alerts import load_twilio_config_from_env
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -180,7 +185,7 @@ def predict_post():
 
     city = (form.get("city") or "Patna").strip()
     soil_type = (form.get("soil_type") or "alluvial").strip().lower()
-    to_number = (form.get("to_number") or "").strip()
+    client_id = (form.get("client_id") or "default").strip() or "default"
     sms_enabled = (form.get("sms_enabled") or "").strip() == "1"
 
     temperature = parse_float(form, "temperature", 28.0)
@@ -215,7 +220,7 @@ def predict_post():
             irrigation_plan=None,
             sms_enabled=sms_enabled,
             sms_message=None,
-            recent_sms=list_recent_jobs(to_number=to_number) if to_number else None,
+            recent_sms=list_recent_jobs_for_client(client_id=client_id) if client_id else None,
             errors=errors,
         )
 
@@ -261,23 +266,19 @@ def predict_post():
 
     sms_message = None
     if sms_enabled:
-        cfg = load_twilio_config_from_env()
-        if cfg is None:
-            errors.append(
-                "SMS enabled, but Twilio is not configured on the server. "
-                "Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER."
-            )
-        elif not to_number:
-            errors.append("SMS enabled, but phone number is missing. Use E.164 format (example: +919876543210).")
-        else:
-            # Store each irrigation event as a pending SMS job (UTC times)
-            jobs = []
-            for ev in plan.events:
-                when_utc = ev.when.astimezone(timezone.utc).replace(tzinfo=None).isoformat(sep=" ")
-                body = f"Smart Crop Advisor: Irrigation reminder for {crop_pred}. {ev.note}"
-                jobs.append({"when_utc": when_utc, "body": body})
-            inserted = enqueue_sms_jobs(to_number=to_number, crop=str(crop_pred), jobs=jobs)
-            sms_message = f"Scheduled {inserted} SMS reminder(s)."
+        # Fake SMS: store reminders and show as popups inside the website
+        jobs = []
+        for ev in plan.events:
+            when_utc = ev.when.astimezone(timezone.utc).replace(tzinfo=None).isoformat(sep=" ")
+            body = f"SMS: Irrigation reminder for {crop_pred}. {ev.note}"
+            jobs.append({"when_utc": when_utc, "body": body})
+        inserted = enqueue_sms_jobs(
+            to_number="fake",
+            crop=str(crop_pred),
+            jobs=jobs,
+            client_id=client_id,
+        )
+        sms_message = f"Scheduled {inserted} in-app SMS popup reminder(s)."
 
     market = None
     demand_badge = None
@@ -307,7 +308,7 @@ def predict_post():
         irrigation_plan=irrigation_plan,
         sms_enabled=sms_enabled,
         sms_message=sms_message,
-        recent_sms=list_recent_jobs(to_number=to_number) if to_number else None,
+        recent_sms=list_recent_jobs_for_client(client_id=client_id) if client_id else None,
         errors=errors,
         # keep form values
         n=n,
@@ -317,8 +318,35 @@ def predict_post():
         rainfall=rainfall,
         soil_type=soil_type,
         organic_matter=organic_matter,
-        to_number=to_number,
+        client_id=client_id,
     )
+
+
+@app.get("/api/notifications")
+def notifications_get():
+    """
+    Returns due "fake SMS" notifications for this browser client_id.
+    """
+    client_id = (request.args.get("client_id") or "default").strip() or "default"
+    rows = fetch_due_pending_jobs_for_client(client_id=client_id, limit=10)
+    payload = []
+    for r in rows:
+        payload.append({"id": int(r["id"]), "body": str(r["body"]), "when_utc": str(r["when_utc"])})
+    return jsonify({"notifications": payload})
+
+
+@app.post("/api/notifications/ack")
+def notifications_ack():
+    """
+    Mark a notification as "sent" after it has been shown in the UI.
+    """
+    data = request.get_json(silent=True) or {}
+    try:
+        job_id = int(data.get("id"))
+    except Exception:
+        return jsonify({"ok": False, "error": "Invalid id"}), 400
+    mark_job_sent(job_id=job_id)
+    return jsonify({"ok": True})
 
 
 if __name__ == "__main__":

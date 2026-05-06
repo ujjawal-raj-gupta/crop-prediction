@@ -10,28 +10,3 @@ services:
         value: 3.11.9
       - key: DATABASE_PATH
         value: /tmp/smart_crop.db
-      - key: TWILIO_ACCOUNT_SID
-        sync: false
-      - key: TWILIO_AUTH_TOKEN
-        sync: false
-      - key: TWILIO_FROM_NUMBER
-        sync: false
-
-  - type: worker
-    name: smart-crop-advisor-worker
-    env: python
-    plan: free
-    buildCommand: pip install -r requirements.txt && python train_model.py
-    startCommand: python sms_worker.py
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.9
-      - key: DATABASE_PATH
-        value: /tmp/smart_crop.db
-      - key: TWILIO_ACCOUNT_SID
-        sync: false
-      - key: TWILIO_AUTH_TOKEN
-        sync: false
-      - key: TWILIO_FROM_NUMBER
-        sync: false
-

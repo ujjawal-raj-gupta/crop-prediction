@@ -37,6 +37,7 @@ def init_db() -> None:
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               created_at_utc TEXT NOT NULL,
               to_number TEXT NOT NULL,
+              client_id TEXT NOT NULL DEFAULT 'default',
               crop TEXT NOT NULL,
               when_utc TEXT NOT NULL,
               body TEXT NOT NULL,
@@ -46,10 +47,17 @@ def init_db() -> None:
             )
             """
         )
+        # Backwards-compatible migration for existing DBs (older schema without client_id)
+        try:
+            conn.execute("ALTER TABLE sms_jobs ADD COLUMN client_id TEXT NOT NULL DEFAULT 'default'")
+        except sqlite3.OperationalError:
+            pass
+
         conn.execute("CREATE INDEX IF NOT EXISTS idx_sms_jobs_pending_when ON sms_jobs(status, when_utc)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_sms_jobs_client_status_when ON sms_jobs(client_id, status, when_utc)")
 
 
-def enqueue_sms_jobs(*, to_number: str, crop: str, jobs: list[dict]) -> int:
+def enqueue_sms_jobs(*, to_number: str, crop: str, jobs: list[dict], client_id: str = "default") -> int:
     """
     jobs: [{when_utc: iso, body: str}]
     Returns number of inserted jobs.
@@ -58,10 +66,10 @@ def enqueue_sms_jobs(*, to_number: str, crop: str, jobs: list[dict]) -> int:
         cur = conn.cursor()
         cur.executemany(
             """
-            INSERT INTO sms_jobs(created_at_utc, to_number, crop, when_utc, body, status)
-            VALUES(datetime('now'), ?, ?, ?, ?, 'pending')
+            INSERT INTO sms_jobs(created_at_utc, to_number, client_id, crop, when_utc, body, status)
+            VALUES(datetime('now'), ?, ?, ?, ?, ?, 'pending')
             """,
-            [(to_number, crop, j["when_utc"], j["body"]) for j in jobs],
+            [(to_number, client_id, crop, j["when_utc"], j["body"]) for j in jobs],
         )
         return cur.rowcount
 
@@ -78,6 +86,26 @@ def fetch_due_pending_jobs(*, limit: int = 25) -> list[sqlite3.Row]:
             LIMIT ?
             """,
             (limit,),
+        )
+        return list(cur.fetchall())
+
+
+def fetch_due_pending_jobs_for_client(*, client_id: str, limit: int = 10) -> list[sqlite3.Row]:
+    """
+    Used by the website to show fake 'SMS popups' (in-app notifications) for the current browser.
+    """
+    with connect() as conn:
+        cur = conn.execute(
+            """
+            SELECT *
+            FROM sms_jobs
+            WHERE status = 'pending'
+              AND client_id = ?
+              AND when_utc <= datetime('now')
+            ORDER BY when_utc ASC
+            LIMIT ?
+            """,
+            (client_id, limit),
         )
         return list(cur.fetchall())
 
@@ -109,6 +137,21 @@ def list_recent_jobs(*, to_number: str, limit: int = 10) -> list[sqlite3.Row]:
             LIMIT ?
             """,
             (to_number, limit),
+        )
+        return list(cur.fetchall())
+
+
+def list_recent_jobs_for_client(*, client_id: str, limit: int = 10) -> list[sqlite3.Row]:
+    with connect() as conn:
+        cur = conn.execute(
+            """
+            SELECT *
+            FROM sms_jobs
+            WHERE client_id = ?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (client_id, limit),
         )
         return list(cur.fetchall())
 
