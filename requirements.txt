@@ -7,3 +7,9 @@ requests
 joblib
 flask
 gunicorn
+fastapi
+uvicorn
+tenacity
+sqlalchemy
+psycopg2-binary
+python-dotenv

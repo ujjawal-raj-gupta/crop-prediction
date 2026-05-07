@@ -1,0 +1,88 @@
+{
+  "brown_plant_hopper": {
+    "affected_crops": ["rice"],
+    "vulnerable_stages": ["tillering", "panicle_initiation"],
+    "weather_triggers": {
+      "humidity_min": 75,
+      "temp_min": 25,
+      "temp_max": 32,
+      "consecutive_days": 3
+    },
+    "bihar_hotspots": ["Darbhanga", "Madhubani", "Sitamarhi"],
+    "symptoms": "Yellowing leaves, hopper burn patches",
+    "treatment": {
+      "organic": "Neem oil spray (5ml/liter)",
+      "chemical": "Imidacloprid 200 SL @ 0.5ml/liter",
+      "timing": "Apply within 48 hours; repeat after 7 days if needed"
+    }
+  },
+  "stem_borer": {
+    "affected_crops": ["rice"],
+    "vulnerable_stages": ["vegetative", "tillering"],
+    "weather_triggers": {
+      "humidity_min": 70,
+      "temp_min": 24,
+      "temp_max": 34,
+      "consecutive_days": 3
+    },
+    "bihar_hotspots": ["Samastipur", "Begusarai"],
+    "symptoms": "Dead hearts, whiteheads",
+    "treatment": {
+      "organic": "Light traps + pheromone traps",
+      "chemical": "Chlorantraniliprole as per label",
+      "timing": "Early infestation stage"
+    }
+  },
+  "aphids": {
+    "affected_crops": ["wheat", "mustard"],
+    "vulnerable_stages": ["tillering", "flowering"],
+    "weather_triggers": {
+      "humidity_min": 60,
+      "temp_min": 15,
+      "temp_max": 28,
+      "consecutive_days": 3
+    },
+    "bihar_hotspots": ["Patna", "Vaishali"],
+    "symptoms": "Leaf curling, sticky honeydew",
+    "treatment": {
+      "organic": "Soap spray / neem extract",
+      "chemical": "Thiamethoxam as per label",
+      "timing": "At first sign of colony buildup"
+    }
+  },
+  "pod_borer": {
+    "affected_crops": ["lentil", "chickpea", "pigeonpeas"],
+    "vulnerable_stages": ["flowering", "pod_formation"],
+    "weather_triggers": {
+      "humidity_min": 55,
+      "temp_min": 20,
+      "temp_max": 33,
+      "consecutive_days": 3
+    },
+    "bihar_hotspots": ["Gaya", "Nalanda"],
+    "symptoms": "Holes in pods, larva inside",
+    "treatment": {
+      "organic": "Bird perches + neem-based",
+      "chemical": "Emamectin benzoate as per label",
+      "timing": "Evening spray when larvae active"
+    }
+  },
+  "army_worm": {
+    "affected_crops": ["maize"],
+    "vulnerable_stages": ["seedling", "vegetative"],
+    "weather_triggers": {
+      "humidity_min": 70,
+      "temp_min": 22,
+      "temp_max": 34,
+      "consecutive_days": 3
+    },
+    "bihar_hotspots": ["Muzaffarpur", "Bhagalpur"],
+    "symptoms": "Leaf scraping, ragged holes",
+    "treatment": {
+      "organic": "Handpick larvae + neem",
+      "chemical": "Spinosad as per label",
+      "timing": "Early morning/evening"
+    }
+  }
+}
+
