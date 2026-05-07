@@ -16,7 +16,7 @@ Then open:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import joblib
@@ -266,19 +266,19 @@ def predict_post():
 
     sms_message = None
     if sms_enabled:
-        # Fake SMS: store reminders and show as popups inside the website
-        jobs = []
-        for ev in plan.events:
-            when_utc = ev.when.astimezone(timezone.utc).replace(tzinfo=None).isoformat(sep=" ")
-            body = f"SMS: Irrigation reminder for {crop_pred}. {ev.note}"
-            jobs.append({"when_utc": when_utc, "body": body})
+        # Fake SMS popup: capture click time on server, schedule a single popup at click+2 minutes.
+        created_at_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+        when_utc_dt = created_at_utc + timedelta(minutes=2)
+        when_utc = when_utc_dt.isoformat(sep=" ")
+        body = f"SMS: Crop predicted '{crop_pred}'. Reminder created at {created_at_utc.isoformat(sep=' ')} UTC."
+        jobs = [{"when_utc": when_utc, "body": body}]
         inserted = enqueue_sms_jobs(
             to_number="fake",
             crop=str(crop_pred),
             jobs=jobs,
             client_id=client_id,
         )
-        sms_message = f"Scheduled {inserted} in-app SMS popup reminder(s)."
+        sms_message = f"Scheduled {inserted} in-app SMS popup reminder(s) for click time + 2 minutes."
 
     market = None
     demand_badge = None

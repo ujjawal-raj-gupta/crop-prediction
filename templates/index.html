@@ -236,7 +236,9 @@
                           <tr>
                             <th>ID</th>
                             <th>Status</th>
-                            <th>When (UTC)</th>
+                            <th>Created (UTC)</th>
+                            <th>Scheduled (UTC)</th>
+                            <th>Sent (UTC)</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -244,7 +246,9 @@
                             <tr>
                               <td>{{ j.id }}</td>
                               <td>{{ j.status }}</td>
+                              <td class="text-nowrap">{{ j.created_at_utc }}</td>
                               <td class="text-nowrap">{{ j.when_utc }}</td>
+                              <td class="text-nowrap">{{ j.sent_at_utc if j.sent_at_utc else "-" }}</td>
                             </tr>
                           {% endfor %}
                         </tbody>
