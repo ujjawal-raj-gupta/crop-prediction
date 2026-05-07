@@ -15,3 +15,16 @@ class Config:
     # Database (Postgres)
     DATABASE_URL: str = os.getenv("DATABASE_URL", "").strip()
 
+
+def load_dotenv_if_present() -> None:
+    """
+    Optional convenience for local dev:
+    reads .env if present (no-op otherwise).
+    """
+    try:
+        from dotenv import load_dotenv
+
+        load_dotenv()
+    except Exception:
+        pass
+

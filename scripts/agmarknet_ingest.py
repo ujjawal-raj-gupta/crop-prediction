@@ -4,12 +4,19 @@ import json
 import os
 from datetime import datetime
 
-import pandas as pd
-import psycopg2
-from psycopg2.extras import execute_values
+import sys
+from pathlib import Path
+
+from sqlalchemy import select
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.utils.config import Config
+from src.utils.config import load_dotenv_if_present
 from src.utils.data_fetchers import agmarknet_fetch_all
+from src.db.models import PriceHistory
+from src.db.session import session_scope
 
 
 def _parse_date(s: str) -> str | None:
@@ -25,9 +32,8 @@ def _parse_date(s: str) -> str | None:
 
 
 def main() -> None:
+    load_dotenv_if_present()
     cfg = Config()
-    if not cfg.DATABASE_URL:
-        raise RuntimeError("Missing DATABASE_URL (Postgres connection string).")
 
     state = os.getenv("AG_STATE", "Bihar")
     commodity = os.getenv("AG_COMMODITY", "Wheat")
@@ -42,15 +48,14 @@ def main() -> None:
         print("No records returned.")
         return
 
-    df = pd.DataFrame(records)
-
     # Normalize common columns (Agmarknet fields vary; keep raw JSON)
     # Common keys observed: arrival_date, market, district, modal_price, min_price, max_price, commodity, state
-    rows = []
+    inserted = 0
+    updated = 0
     for r in records:
-        date = _parse_date(str(r.get("arrival_date") or r.get("date") or ""))
-        mandi = str(r.get("market") or r.get("mandi") or "").strip()
-        district = str(r.get("district") or "").strip() or None
+        date_iso = _parse_date(str(r.get("arrival_date") or r.get("date") or ""))
+        mandi = str(r.get("market") or r.get("mandi") or "").strip().lower()
+        district = (str(r.get("district") or "").strip().lower() or None)
 
         def _num(x):
             try:
@@ -62,50 +67,43 @@ def main() -> None:
         minp = _num(r.get("min_price"))
         maxp = _num(r.get("max_price"))
 
-        if not date or not mandi:
+        if not date_iso or not mandi:
             continue
 
-        rows.append(
-            (
-                date,
-                commodity.lower(),
-                mandi.lower(),
-                state.lower(),
-                district.lower() if district else None,
-                modal,
-                minp,
-                maxp,
-                json.dumps(r),
-            )
-        )
-
-    if not rows:
-        print("No usable rows after normalization.")
-        return
-
-    conn = psycopg2.connect(cfg.DATABASE_URL)
-    try:
-        with conn:
-            with conn.cursor() as cur:
-                execute_values(
-                    cur,
-                    """
-                    INSERT INTO price_history
-                      (date, crop, mandi, state, district, price_per_quintal, min_price, max_price, raw)
-                    VALUES %s
-                    ON CONFLICT (date, crop, mandi, state) DO UPDATE SET
-                      district = EXCLUDED.district,
-                      price_per_quintal = EXCLUDED.price_per_quintal,
-                      min_price = EXCLUDED.min_price,
-                      max_price = EXCLUDED.max_price,
-                      raw = EXCLUDED.raw
-                    """,
-                    rows,
-                    page_size=1000,
+        # Use ORM UPSERT pattern (portable across sqlite/postgres):
+        # - check if row exists
+        # - insert or update
+        with session_scope() as s:
+            existing = s.execute(
+                select(PriceHistory).where(
+                    PriceHistory.date == date_iso,
+                    PriceHistory.crop == commodity.lower(),
+                    PriceHistory.mandi == mandi,
+                    PriceHistory.state == state.lower(),
                 )
-        print(f"Inserted/updated rows: {len(rows)} for {state=} {commodity=}")
-    finally:
-        conn.close()
+            ).scalar_one_or_none()
+
+            payload = dict(
+                date=date_iso,
+                crop=commodity.lower(),
+                mandi=mandi,
+                state=state.lower(),
+                district=district,
+                price_per_quintal=modal,
+                min_price=minp,
+                max_price=maxp,
+                raw=json.loads(json.dumps(r)),  # ensure JSON-serializable
+            )
+
+            if existing is None:
+                s.add(PriceHistory(**payload))
+                inserted += 1
+            else:
+                for k, v in payload.items():
+                    setattr(existing, k, v)
+                updated += 1
+
+    print(f"Inserted: {inserted}, Updated: {updated} for {state=} {commodity=}")
 
 
 if __name__ == "__main__":
