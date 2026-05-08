@@ -4,12 +4,15 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.utils.config import Config, load_dotenv_if_present
 from src.utils.data_fetchers import AgmarknetQuery, agmarknet_fetch_page
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUT_PATH = PROJECT_ROOT / "data" / "agmarknet_snapshot.json"
 
 
