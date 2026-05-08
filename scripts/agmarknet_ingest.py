@@ -14,7 +14,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.utils.config import Config
 from src.utils.config import load_dotenv_if_present
-from src.utils.data_fetchers import agmarknet_fetch_all
+from src.utils.data_fetchers import AgmarknetQuery, agmarknet_fetch_page
 from src.db.models import PriceHistory
 from src.db.session import session_scope
 
@@ -38,12 +38,29 @@ def main() -> None:
     state = os.getenv("AG_STATE", "Bihar")
     commodity = os.getenv("AG_COMMODITY", "Wheat")
 
-    records = agmarknet_fetch_all(
-        api_key=cfg.AGMARKNET_API_KEY,
-        resource_id=cfg.AGMARKNET_RESOURCE_ID,
-        state=state,
-        commodity=commodity,
-    )
+    # data.gov.in can be slow/unreliable; ingest in small pages to avoid long hangs.
+    limit = int(float(os.getenv("AG_LIMIT", "250")))
+    max_pages = int(float(os.getenv("AG_MAX_PAGES", "1")))
+    timeout_s = float(os.getenv("AG_TIMEOUT_S", "60"))
+
+    records: list[dict] = []
+    offset = 0
+    for _ in range(max_pages):
+        page = agmarknet_fetch_page(
+            api_key=cfg.AGMARKNET_API_KEY,
+            resource_id=cfg.AGMARKNET_RESOURCE_ID,
+            q=AgmarknetQuery(state=state, commodity=commodity, limit=limit, offset=offset),
+            timeout_s=timeout_s,
+            max_attempts=2,
+        )
+        recs = page.get("records") or []
+        if not recs:
+            break
+        records.extend(recs)
+        offset += len(recs)
+        if len(recs) < limit:
+            break
+
     if not records:
         print("No records returned.")
         return

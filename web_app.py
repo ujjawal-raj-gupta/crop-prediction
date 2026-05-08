@@ -32,6 +32,8 @@ from db import (
     mark_job_sent,
 )
 from irrigation_plan import build_irrigation_plan
+from market_live import get_live_mandi_prices
+from src.utils.config import load_dotenv_if_present
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -45,6 +47,8 @@ from features import build_model_input_row, default_feature_cols
 
 app = Flask(__name__)
 init_db()
+# Load .env if present (local dev convenience for API keys).
+load_dotenv_if_present()
 
 
 @dataclass
@@ -168,6 +172,8 @@ def index_get():
         used_fallback=used_fallback,
         result=None,
         market=None,
+        live_market=None,
+        live_market_error=None,
         confidence=None,
         demand_badge=None,
         irrigation_plan=None,
@@ -215,6 +221,8 @@ def predict_post():
             used_fallback=used_fallback,
             result=None,
             market=None,
+            live_market=None,
+            live_market_error=None,
             confidence=None,
             demand_badge=None,
             irrigation_plan=None,
@@ -249,6 +257,8 @@ def predict_post():
     if hasattr(model, "predict_proba"):
         proba = model.predict_proba(X_input)[0]
         confidence = float(proba.max())
+
+    live_market, live_market_error = get_live_mandi_prices(crop_label=str(crop_pred), state="Bihar")
 
     # Build irrigation plan
     plan = build_irrigation_plan(
@@ -303,6 +313,8 @@ def predict_post():
         used_fallback=used_fallback,
         result=str(crop_pred),
         market=market,
+        live_market=live_market,
+        live_market_error=live_market_error,
         confidence=confidence,
         demand_badge=demand_badge,
         irrigation_plan=irrigation_plan,
