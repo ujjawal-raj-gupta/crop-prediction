@@ -31,8 +31,17 @@ jobs:
           AGMARKNET_RESOURCE_ID: ${{ secrets.AGMARKNET_RESOURCE_ID }}
           AG_STATE: Bihar
           AG_LIMIT: "250"
-          AG_TIMEOUT_S: "30"
+          AG_TIMEOUT_S: "60"
         run: |
+          if [ -z "$AGMARKNET_API_KEY" ]; then
+            echo "ERROR: Missing GitHub Actions secret AGMARKNET_API_KEY"
+            exit 1
+          fi
+          if [ -z "$AGMARKNET_RESOURCE_ID" ]; then
+            echo "ERROR: Missing GitHub Actions secret AGMARKNET_RESOURCE_ID"
+            exit 1
+          fi
+          echo "AGMARKNET_RESOURCE_ID=${AGMARKNET_RESOURCE_ID}"
           python scripts/agmarknet_snapshot.py
 
       - name: Commit snapshot if changed
