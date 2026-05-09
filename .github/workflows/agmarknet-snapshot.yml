@@ -31,7 +31,10 @@ jobs:
           AGMARKNET_RESOURCE_ID: ${{ secrets.AGMARKNET_RESOURCE_ID }}
           AG_STATE: Bihar
           AG_LIMIT: "250"
-          AG_TIMEOUT_S: "60"
+          AG_TIMEOUT_S: "45"
+          # Fewer commodities = faster run; expand via repo env later if needed.
+          AG_COMMODITIES: "Wheat,Rice,Maize,Jute"
+          AG_MAX_ATTEMPTS: "1"
         run: |
           if [ -z "$AGMARKNET_API_KEY" ]; then
             echo "ERROR: Missing GitHub Actions secret AGMARKNET_API_KEY"
