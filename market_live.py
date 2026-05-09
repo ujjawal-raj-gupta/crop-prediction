@@ -11,18 +11,9 @@ from sqlalchemy import desc, select
 
 from src.db.models import Base, PriceHistory
 from src.db.session import engine, session_scope
+from src.utils.agmarknet_mandi import BIHAR_MANDIS, commodity_matches_crop, match_bihar_mandi_key
 from src.utils.config import Config, load_dotenv_if_present
 from src.utils.data_fetchers import AgmarknetError, AgmarknetQuery, agmarknet_fetch_page
-
-
-BIHAR_MANDIS = [
-    "patna",
-    "muzaffarpur",
-    "bhagalpur",
-    "darbhanga",
-    "gaya",
-    "begusarai",
-]
 
 SNAPSHOT_PATH = str(Path(__file__).resolve().parent / "data" / "agmarknet_snapshot.json")
 
@@ -79,10 +70,11 @@ def _upsert_prices_from_agmarknet(*, crop: str, state: str, mandis: list[str]) -
         return 0
 
     inserted_or_updated = 0
+    crop_norm = crop.strip().lower()
     for r in records:
         date_iso = _parse_date_iso(str(r.get("arrival_date") or r.get("date") or ""))
-        mandi = str(r.get("market") or r.get("mandi") or "").strip().lower()
-        if not date_iso or not mandi or mandi not in mandis:
+        mandi_key = match_bihar_mandi_key(str(r.get("market") or r.get("mandi") or ""))
+        if not date_iso or not mandi_key or mandi_key not in mandis:
             continue
 
         district = (str(r.get("district") or "").strip().lower() or None)
@@ -92,8 +84,8 @@ def _upsert_prices_from_agmarknet(*, crop: str, state: str, mandis: list[str]) -
 
         payload = dict(
             date=date_iso,
-            crop=crop.strip().lower(),
-            mandi=mandi,
+            crop=crop_norm,
+            mandi=mandi_key,
             state=state.strip().lower(),
             district=district,
             price_per_quintal=modal,
@@ -142,9 +134,14 @@ def _try_import_snapshot_into_db(*, crop_norm: str, state_norm: str, mandis: lis
     inserted_or_updated = 0
     for r in records:
         commodity = str(r.get("commodity") or "").strip().lower()
-        mandi = str(r.get("market") or r.get("mandi") or "").strip().lower()
+        mandi_key = match_bihar_mandi_key(str(r.get("market") or r.get("mandi") or ""))
         state = str(r.get("state") or state_norm).strip().lower()
-        if commodity != crop_norm or state != state_norm or mandi not in mandis:
+        if (
+            not mandi_key
+            or mandi_key not in mandis
+            or state != state_norm
+            or not commodity_matches_crop(record_commodity=commodity, crop_norm=crop_norm)
+        ):
             continue
 
         date_iso = _parse_date_iso(str(r.get("arrival_date") or r.get("date") or ""))
@@ -159,7 +156,7 @@ def _try_import_snapshot_into_db(*, crop_norm: str, state_norm: str, mandis: lis
         payload_row = dict(
             date=date_iso,
             crop=crop_norm,
-            mandi=mandi,
+            mandi=mandi_key,
             state=state_norm,
             district=district,
             price_per_quintal=modal,
@@ -173,7 +170,7 @@ def _try_import_snapshot_into_db(*, crop_norm: str, state_norm: str, mandis: lis
                 select(PriceHistory).where(
                     PriceHistory.date == date_iso,
                     PriceHistory.crop == crop_norm,
-                    PriceHistory.mandi == mandi,
+                    PriceHistory.mandi == mandi_key,
                     PriceHistory.state == state_norm,
                 )
             ).scalar_one_or_none()
@@ -192,7 +189,7 @@ def get_live_mandi_prices(
     crop_label: str,
     state: str = "Bihar",
     mandis: list[str] | None = None,
-    max_age_days: int = 2,
+    max_age_days: int = 120,
 ) -> tuple[list[LiveMandiPrice], str | None]:
     """
     Returns (prices, error). If AGMARKNET_API_KEY isn't configured, prices will be empty with an error message.
@@ -244,10 +241,17 @@ def get_live_mandi_prices(
         # Still nothing? Avoid blocking the prediction request on slow upstream APIs.
         # If you want auto-fetch on each prediction, set AGMARKNET_AUTO_FETCH=1.
         if recent is None and (os.getenv("AGMARKNET_AUTO_FETCH") or "").strip() != "1":
+            snap_hint = ""
+            if not Path(SNAPSHOT_PATH).exists():
+                snap_hint = (
+                    " Snapshot file data/agmarknet_snapshot.json is missing locally — "
+                    "run `git pull` from GitHub after Actions commits it."
+                )
             return (
                 [],
                 "No cached Agmarknet prices yet for this crop. Enable GitHub Actions snapshot, "
-                "or run scripts/agmarknet_ingest.py once to populate the database (or set AGMARKNET_AUTO_FETCH=1).",
+                "or run scripts/agmarknet_ingest.py once to populate the database (or set AGMARKNET_AUTO_FETCH=1)."
+                + snap_hint,
             )
         try:
             _upsert_prices_from_agmarknet(crop=commodity, state=state, mandis=mandis)

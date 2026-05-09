@@ -9,6 +9,7 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.utils.agmarknet_mandi import BIHAR_MANDIS, match_bihar_mandi_key
 from src.utils.config import Config, load_dotenv_if_present
 from src.utils.data_fetchers import AgmarknetError, AgmarknetQuery, agmarknet_fetch_page
 
@@ -25,16 +26,6 @@ DEFAULT_COMMODITIES = [
     "Mango",
     "Potato",
     "Onion",
-]
-
-
-BIHAR_MANDIS = [
-    "patna",
-    "muzaffarpur",
-    "bhagalpur",
-    "darbhanga",
-    "gaya",
-    "begusarai",
 ]
 
 
@@ -68,8 +59,8 @@ def main() -> None:
             )
             records = page.get("records") or []
             for r in records:
-                mandi = str(r.get("market") or r.get("mandi") or "").strip().lower()
-                if mandi and mandi in BIHAR_MANDIS:
+                k = match_bihar_mandi_key(str(r.get("market") or r.get("mandi") or ""))
+                if k:
                     all_rows.append(r)
             print(f"OK commodity={commodity!r} mandi_rows_so_far={len(all_rows)}")
         except AgmarknetError as e:
