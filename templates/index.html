@@ -198,48 +198,6 @@
                   {% endif %}
                 </div>
 
-                <div class="market-box mt-3">
-                  <div class="market-title">Live Market (Agmarknet)</div>
-                  {% if live_market and live_market|length > 0 %}
-                    <div class="text-muted small mb-2">Latest stored modal prices (₹/quintal) for Bihar mandis.</div>
-                    <div class="table-responsive">
-                      <table class="table table-sm align-middle mb-0">
-                        <thead>
-                          <tr>
-                            <th>Mandi</th>
-                            <th>Date</th>
-                            <th>Modal</th>
-                            <th>Min</th>
-                            <th>Max</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for r in live_market %}
-                            <tr>
-                              <td class="text-nowrap">{{ r.mandi|capitalize }}</td>
-                              <td class="text-nowrap">{{ r.date }}</td>
-                              <td>{{ r.modal_price_per_quintal if r.modal_price_per_quintal is not none else "-" }}</td>
-                              <td>{{ r.min_price if r.min_price is not none else "-" }}</td>
-                              <td>{{ r.max_price if r.max_price is not none else "-" }}</td>
-                            </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  {% else %}
-                    {% if live_market_error %}
-                      <div class="text-muted">{{ live_market_error }}</div>
-                      {% if "Missing AGMARKNET_API_KEY" in live_market_error %}
-                        <div class="text-muted small mt-1">
-                          To enable: set <code>AGMARKNET_API_KEY</code> (data.gov.in) and retry.
-                        </div>
-                      {% endif %}
-                    {% else %}
-                      <div class="text-muted">No live price records stored yet for this crop.</div>
-                    {% endif %}
-                  {% endif %}
-                </div>
-
                 {% if irrigation_plan %}
                   <div class="market-box mt-3">
                     <div class="market-title">Irrigation plan (timings)</div>
