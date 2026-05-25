@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terms & Conditions • Bihar Agriculture 4.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { colors: { gov: { navy: "#003087", saffron: "#FF9933", green: "#138808" } }, borderRadius:{gov:"12px"} } } };
+    </script>
+    <link rel="stylesheet" href="./assets/styles.css?v=5" />
+  </head>
+  <body class="min-h-screen" data-page="terms">
+    <div id="toastHost" class="toast"></div>
+
+    <header class="bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <a href="./index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gov-navy text-white grid place-items-center font-extrabold">BA</div>
+          <div class="leading-tight">
+            <div class="font-extrabold text-slate-900">Bihar Agriculture 4.0</div>
+            <div class="text-xs text-slate-600">Smart Farming Intelligence Platform</div>
+          </div>
+        </a>
+        <div class="flex items-center gap-2">
+          <button id="langBtn" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">हिं</button>
+          <a href="./support.html" class="btn btn-primary" data-i18n="nav.support">Support</a>
+        </div>
+      </div>
+      <nav class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center gap-4 py-2 text-sm" data-nav-root>
+          <a data-nav href="./index.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.home">Home</a>
+          <a data-nav href="./market.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.market">Market Intelligence</a>
+          <a data-nav href="./pest.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.pest">Pest Warning</a>
+          <a data-nav href="./crop.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.crop">Crop Recommendation</a>
+          <a data-nav href="./analytics.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.analytics">Analytics</a>
+          <a data-nav href="./reports.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.reports">Reports</a>
+          <a data-nav href="./monitoring.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.monitoring">Monitoring</a>
+          <a data-nav href="./services.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.services">Services</a>
+          <a data-nav href="./alerts.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.alerts">Alerts</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-10">
+      <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Legal &amp; policy</div>
+      <h1 class="mt-1 text-3xl md:text-4xl font-extrabold text-slate-900" data-i18n="nav.terms">Terms &amp; Conditions</h1>
+      <p class="mt-2 text-slate-600">Please read these terms before using Bihar Agriculture 4.0 services. The platform is intended as <strong>advisory only</strong> and does not replace professional or government extension services.</p>
+
+      <div class="mt-6 gov-card p-6 md:p-8 terms-prose">
+        <h2>1. Platform usage disclaimer</h2>
+        <p>Bihar Agriculture 4.0 ("the platform") is a citizen advisory portal operated by the Government of Bihar Agriculture Department. The platform may be modified, suspended, or discontinued without prior notice. Use of any feature constitutes acceptance of these terms.</p>
+
+        <h2>2. Agricultural advisory limitation</h2>
+        <p>Crop recommendations, pest warnings, irrigation suggestions, and market forecasts are <strong>indicative</strong> and based on the data the user supplies plus public weather/market feeds. Field conditions vary widely — always validate with your local Krishi Vigyan Kendra (KVK) or block agriculture officer before acting at scale.</p>
+
+        <h2>3. Weather data disclaimer</h2>
+        <p>Weather information is sourced from third-party providers (Open-Meteo). Forecasts beyond 72 hours are inherently uncertain. The platform makes no guarantee about temperature, humidity, or rainfall accuracy and is not liable for crop losses attributable to weather deviation.</p>
+
+        <h2>4. Market prediction disclaimer</h2>
+        <p>Mandi price forecasts are estimated from historical Agmarknet data and demonstration models. Actual market prices depend on national policy, MSP, weather, transport costs and demand cycles. Forecasts must <strong>not</strong> be treated as investment advice or selling guarantees.</p>
+
+        <h2>5. Pest prediction disclaimer</h2>
+        <p>Pest risk scores combine knowledge-base triggers with weather signals. The platform may produce false-positives or false-negatives. Final treatment decisions — especially chemical pesticide use — must follow label directions, withholding periods, and the advice of registered agronomists.</p>
+
+        <h2>6. User responsibility</h2>
+        <ul>
+          <li>Provide accurate information about location, crop, and growth stage.</li>
+          <li>Verify chemical product names and dosages with local dealers before purchase.</li>
+          <li>Follow safety protocols (PPE, spray timing, water sources) during pest treatment.</li>
+          <li>Do not use the platform for commercial resale of advisory content without written approval.</li>
+        </ul>
+
+        <h2>7. Data &amp; privacy</h2>
+        <p>The platform records anonymised usage metrics, support tickets, and pest alert events to improve the service. Personal information (phone, email) provided in support tickets is used only to respond to your request and is not shared with third parties outside the Agriculture Department workflow.</p>
+
+        <h2>8. Support limitation</h2>
+        <p>The helpdesk operates Monday–Saturday, 10:00–17:00 IST (excluding public holidays). Tickets are acknowledged within 24 office hours. Critical issues should additionally be reported by phone (1800-XXX-XXXX).</p>
+
+        <h2>9. Third-party API disclaimer</h2>
+        <p>The platform integrates with public APIs (data.gov.in Agmarknet, Open-Meteo). Outages, rate limits, or changes in those services may impair platform functionality. The platform takes no responsibility for third-party data accuracy.</p>
+
+        <h2>10. Limitation of liability</h2>
+        <p>To the maximum extent permitted by law, the Government of Bihar, the Agriculture Department, and their officers shall not be liable for any direct, indirect, incidental, or consequential damages arising from the use of, or reliance on, the platform's advisories.</p>
+
+        <h2>11. Changes to these terms</h2>
+        <p>These terms may be updated periodically. Material changes will be announced on the homepage and via a fresh acceptance prompt. The "last updated" date below indicates the current revision.</p>
+
+        <p class="mt-6 text-sm"><strong>Last updated:</strong> 21 May 2026 &middot; <strong>Version:</strong> 1.0</p>
+      </div>
+
+      <!-- Acceptance section -->
+      <div class="mt-6 gov-card p-6">
+        <div class="flex items-start gap-3">
+          <div class="flex-1">
+            <div class="font-extrabold text-slate-900">Acceptance</div>
+            <div class="text-sm text-slate-600 mt-1">Tick the box to record your acceptance. Acceptance is stored on this device only.</div>
+
+            <label class="mt-4 flex items-start gap-3 cursor-pointer">
+              <input id="termsAcceptBox" type="checkbox" class="mt-1 h-5 w-5 rounded border-slate-300 text-gov-navy focus:ring-2 focus:ring-gov-navy" />
+              <span class="text-sm text-slate-700">
+                I have read and agree to the <strong>Terms &amp; Conditions</strong> and the data &amp; privacy notice above.
+              </span>
+            </label>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button id="termsSaveBtn" class="btn btn-primary">Save acceptance</button>
+              <button id="termsClearBtn" class="btn btn-ghost">Reset acceptance</button>
+              <span id="termsStatus" class="text-sm font-semibold text-slate-500 self-center"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <a id="supportFab" class="fab" href="./support.html" aria-label="Support"><span class="font-extrabold text-lg">?</span></a>
+    <div id="supportPanel" class="support-panel">
+      <div class="gov-card p-5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="font-extrabold text-slate-900" data-i18n="support.title">Citizen Assistance</div>
+            <div class="text-sm text-slate-600">Phone: 1800-XXX-XXXX • WhatsApp: +91-XXXXXXXXXX</div>
+          </div>
+          <button id="supportClose" class="btn btn-ghost">Close</button>
+        </div>
+        <div class="mt-4">
+          <input class="gov-input" data-i18n-placeholder="support.search" placeholder="How can we help you?" />
+        </div>
+        <div class="mt-4 grid gap-2 text-sm">
+          <a class="px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold" href="./support.html">Create a ticket</a>
+          <a class="px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold" href="./faq.html">Search FAQs</a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-slate-600 flex flex-wrap gap-2 justify-between" data-footer-root>
+        <div>© 2026 Government of Bihar • Agriculture Department</div>
+        <div class="flex gap-3" data-footer-links>
+          <a class="hover:text-slate-900 font-semibold" href="./about.html">About</a>
+          <a class="hover:text-slate-900 font-semibold" href="./contact.html">Contact</a>
+          <a class="hover:text-slate-900 font-semibold" href="./support.html">Support</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./assets/app.js?v=9"></script>
+  </body>
+</html>

@@ -8,6 +8,7 @@ joblib
 flask
 gunicorn
 fastapi
+python-multipart
 uvicorn
 tenacity
 sqlalchemy

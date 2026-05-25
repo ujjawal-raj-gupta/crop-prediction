@@ -1,5 +1,8 @@
 {
   "brown_plant_hopper": {
+    "display_name": "Brown Plant Hopper",
+    "icon": "🦗",
+    "category": "Sap-sucking insect",
     "affected_crops": ["rice"],
     "vulnerable_stages": ["tillering", "panicle_initiation"],
     "weather_triggers": {
@@ -9,14 +12,55 @@
       "consecutive_days": 3
     },
     "bihar_hotspots": ["Darbhanga", "Madhubani", "Sitamarhi"],
-    "symptoms": "Yellowing leaves, hopper burn patches",
+    "summary": "Small brownish planthoppers that suck sap at the base of rice tillers, causing severe yellowing patches known as hopper burn.",
+    "symptoms_list": [
+      "Yellowing of plants from the base upward",
+      "Circular dried 'hopper burn' patches in the field",
+      "Adults and nymphs visible at base of tillers when parted",
+      "Sooty mould growth from honeydew secretion"
+    ],
+    "prevention": [
+      "Avoid excessive nitrogen application (split doses recommended)",
+      "Maintain proper plant spacing (20×15 cm) to improve air circulation",
+      "Drain field for 3-4 days at first sighting to break the lifecycle",
+      "Plant resistant varieties such as IR-64 or Swarna Sub-1 where available",
+      "Regular field scouting twice a week during vulnerable stages"
+    ],
+    "organic_solutions": [
+      "Spray neem oil 5 ml/litre of water at 7-day intervals",
+      "Release Mirid bug (Cyrtorhinus lividipennis) as a biocontrol agent",
+      "Apply fish-oil rosin soap 25 g/litre as a contact spray",
+      "Use yellow sticky traps at 10 per acre to monitor populations"
+    ],
+    "chemical_treatments": [
+      "Imidacloprid 17.8 SL @ 0.5 ml/litre at threshold of 5-10 hoppers/hill",
+      "Buprofezin 25 SC @ 1.6 ml/litre for nymphal stages",
+      "Pymetrozine 50 WG @ 0.6 g/litre as a selective alternative",
+      "Always rotate insecticide groups to prevent resistance"
+    ],
+    "irrigation_advice": [
+      "Drain standing water for 3-4 days when infestation is detected",
+      "Avoid continuous deep flooding which favours BPH multiplication",
+      "Re-irrigate to a shallow 2-3 cm depth after drainage period",
+      "Synchronise irrigation with neighbours to reduce migration"
+    ],
+    "emergency_actions": [
+      "Immediately drain the field and apply systemic insecticide spray",
+      "Spot-spray hopper burn patches twice with a 5-day gap",
+      "Report to nearest Krishi Vigyan Kendra (KVK) for community-wide action",
+      "Avoid blanket spraying which kills beneficial Mirid bug predators"
+    ],
     "treatment": {
       "organic": "Neem oil spray (5ml/liter)",
       "chemical": "Imidacloprid 200 SL @ 0.5ml/liter",
       "timing": "Apply within 48 hours; repeat after 7 days if needed"
-    }
+    },
+    "symptoms": "Yellowing leaves, hopper burn patches"
   },
   "stem_borer": {
+    "display_name": "Yellow Stem Borer",
+    "icon": "🐛",
+    "category": "Internal stem feeder",
     "affected_crops": ["rice"],
     "vulnerable_stages": ["vegetative", "tillering"],
     "weather_triggers": {
@@ -26,14 +70,55 @@
       "consecutive_days": 3
     },
     "bihar_hotspots": ["Samastipur", "Begusarai"],
-    "symptoms": "Dead hearts, whiteheads",
+    "summary": "Larvae of yellow stem borer moths tunnel inside rice tillers, killing the central shoot (dead heart) at vegetative stage and producing whiteheads at panicle stage.",
+    "symptoms_list": [
+      "Dead hearts (dried central shoots) during vegetative stage",
+      "Whiteheads (empty white panicles) at flowering stage",
+      "Frass and sawdust-like material at base of tiller",
+      "Small entry holes near the base of damaged stems"
+    ],
+    "prevention": [
+      "Clip the tips of seedlings before transplanting to remove egg masses",
+      "Plough crop stubble immediately after harvest to destroy diapausing larvae",
+      "Avoid late transplanting beyond mid-July for Kharif rice",
+      "Synchronise transplanting in the village to break the host cycle",
+      "Use light traps from transplanting onwards"
+    ],
+    "organic_solutions": [
+      "Install one pheromone trap per acre at 1 m above canopy",
+      "Release Trichogramma japonicum @ 50,000 per acre, 3 times at weekly intervals",
+      "Hand-pick and destroy egg masses observed during scouting",
+      "Spray neem seed kernel extract 5% as a deterrent"
+    ],
+    "chemical_treatments": [
+      "Chlorantraniliprole 18.5 SC @ 0.4 ml/litre at 30 days after transplanting",
+      "Cartap hydrochloride 4 G @ 10 kg/acre as a granular application",
+      "Fipronil 5 SC @ 2 ml/litre when dead heart % crosses threshold",
+      "Apply when egg masses exceed 1 per square metre"
+    ],
+    "irrigation_advice": [
+      "Maintain shallow standing water (3-5 cm) which reduces moth landing",
+      "Avoid alternate wetting-drying during peak moth emergence",
+      "Top-up irrigation immediately after granular insecticide use",
+      "Drain briefly before scheduled foliar spray for better deposit"
+    ],
+    "emergency_actions": [
+      "Apply granular insecticide within 48 hours if dead heart > 10%",
+      "Combine chemical with mass pheromone trapping for community-level impact",
+      "Coordinate with adjacent farms to break the larval supply line",
+      "Notify the block agriculture officer for area-wide advisory"
+    ],
     "treatment": {
       "organic": "Light traps + pheromone traps",
       "chemical": "Chlorantraniliprole as per label",
       "timing": "Early infestation stage"
-    }
+    },
+    "symptoms": "Dead hearts, whiteheads"
   },
   "aphids": {
+    "display_name": "Aphids",
+    "icon": "🐜",
+    "category": "Sap-sucking insect",
     "affected_crops": ["wheat", "mustard"],
     "vulnerable_stages": ["tillering", "flowering"],
     "weather_triggers": {
@@ -43,14 +128,55 @@
       "consecutive_days": 3
     },
     "bihar_hotspots": ["Patna", "Vaishali"],
-    "symptoms": "Leaf curling, sticky honeydew",
+    "summary": "Soft-bodied insects that form dense colonies on shoots and inflorescences, weakening plants and transmitting viral diseases.",
+    "symptoms_list": [
+      "Leaf curling and yellowing in patches",
+      "Sticky honeydew coating on lower leaves",
+      "Sooty mould turning leaves black",
+      "Stunted growth and small pod / grain size",
+      "Visible clusters of green / black insects on shoots"
+    ],
+    "prevention": [
+      "Time sowing to avoid peak aphid migration (early-November for mustard)",
+      "Maintain field hygiene by removing weed hosts like Chenopodium",
+      "Encourage ladybird beetle populations by avoiding broad-spectrum sprays",
+      "Use yellow sticky traps at 8-10 per acre for monitoring",
+      "Mix nitrogen with potash to harden tissues"
+    ],
+    "organic_solutions": [
+      "Spray neem oil 3-5 ml/litre at first sighting",
+      "Release Coccinella septempunctata (ladybird) @ 1500 per acre",
+      "Strong water jet to dislodge colonies on hardy crops",
+      "Soap solution 1% as a contact wash"
+    ],
+    "chemical_treatments": [
+      "Thiamethoxam 25 WG @ 0.2 g/litre when threshold (20 aphids / plant) is crossed",
+      "Imidacloprid 17.8 SL @ 0.3 ml/litre as foliar spray",
+      "Dimethoate 30 EC @ 1.7 ml/litre for severe outbreak",
+      "Time sprays before bee activity (late afternoon)"
+    ],
+    "irrigation_advice": [
+      "Avoid water stress, which makes plants more susceptible",
+      "Light surface irrigation can dislodge colonies in dryland mustard",
+      "Synchronise irrigation with spray operations for better systemic uptake"
+    ],
+    "emergency_actions": [
+      "Apply systemic insecticide within 72 hours if colony density > 20 / plant",
+      "Issue ward-level advisory to neighbouring fields",
+      "Combine ladybird release with selective insecticide for sustained control",
+      "Re-scout 5 days after spray; repeat if needed"
+    ],
     "treatment": {
       "organic": "Soap spray / neem extract",
       "chemical": "Thiamethoxam as per label",
       "timing": "At first sign of colony buildup"
-    }
+    },
+    "symptoms": "Leaf curling, sticky honeydew"
   },
   "pod_borer": {
+    "display_name": "Pod Borer (Helicoverpa armigera)",
+    "icon": "🪲",
+    "category": "Lepidopteran larva",
     "affected_crops": ["lentil", "chickpea", "pigeonpeas"],
     "vulnerable_stages": ["flowering", "pod_formation"],
     "weather_triggers": {
@@ -60,14 +186,55 @@
       "consecutive_days": 3
     },
     "bihar_hotspots": ["Gaya", "Nalanda"],
-    "symptoms": "Holes in pods, larva inside",
+    "summary": "Polyphagous caterpillar that bores into developing pods and feeds on seeds, causing major yield losses in pulses.",
+    "symptoms_list": [
+      "Circular bore holes on pods",
+      "Larvae visible inside opened pods",
+      "Faecal pellets near pod entry holes",
+      "Premature drying and shedding of flowers and pods",
+      "Patches of damaged pods at field margins"
+    ],
+    "prevention": [
+      "Intercrop with coriander or marigold as a trap and repellent",
+      "Install bird perches at 30 per acre to encourage natural predation",
+      "Avoid continuous pulse-only cropping; rotate with cereals",
+      "Time sowing so pod-formation does not coincide with peak moth flight",
+      "Monitor with pheromone traps from flowering onwards"
+    ],
+    "organic_solutions": [
+      "HaNPV (Helicoverpa nuclear polyhedrosis virus) @ 250 LE per acre at dusk",
+      "Bacillus thuringiensis (Bt) kurstaki @ 1 g/litre on young larvae",
+      "Neem seed kernel extract 5% at flowering",
+      "Trap crops of marigold or okra at field borders"
+    ],
+    "chemical_treatments": [
+      "Emamectin benzoate 5 SG @ 0.4 g/litre on young larvae",
+      "Indoxacarb 14.5 SC @ 1 ml/litre when threshold (1 larva / metre row) is crossed",
+      "Spinosad 45 SC @ 0.3 ml/litre as a low-residue option",
+      "Spray in early morning or late evening for best larval contact"
+    ],
+    "irrigation_advice": [
+      "Provide light irrigation at flowering to reduce moisture stress",
+      "Avoid over-irrigation which prolongs vegetative phase and exposes pods longer",
+      "Keep ridges dry to discourage larval pupation"
+    ],
+    "emergency_actions": [
+      "Spray Emamectin benzoate within 48 hours of crossing economic threshold",
+      "Combine HaNPV with bird perches for non-chemical knockdown",
+      "Hand-pick mature larvae at dusk from severely affected patches",
+      "Notify pulse value-chain stakeholders if outbreak is district-wide"
+    ],
     "treatment": {
       "organic": "Bird perches + neem-based",
       "chemical": "Emamectin benzoate as per label",
       "timing": "Evening spray when larvae active"
-    }
+    },
+    "symptoms": "Holes in pods, larva inside"
   },
   "army_worm": {
+    "display_name": "Fall Army Worm",
+    "icon": "🐌",
+    "category": "Defoliator caterpillar",
     "affected_crops": ["maize"],
     "vulnerable_stages": ["seedling", "vegetative"],
     "weather_triggers": {
@@ -77,12 +244,49 @@
       "consecutive_days": 3
     },
     "bihar_hotspots": ["Muzaffarpur", "Bhagalpur"],
-    "symptoms": "Leaf scraping, ragged holes",
+    "summary": "Invasive caterpillar that scrapes maize leaves and bores into whorls, causing characteristic ragged holes and severe yield loss.",
+    "symptoms_list": [
+      "Window-pane like scraping on younger leaves",
+      "Ragged holes and tattered upper leaves",
+      "Frass (insect droppings) inside the whorl",
+      "Larvae visible in maize whorls during morning hours",
+      "Stunted growth in seedling stage"
+    ],
+    "prevention": [
+      "Avoid staggered planting; sow within a 10-day window in the village",
+      "Inter-crop with legumes (cowpea, pigeonpea) to disrupt host search",
+      "Deep summer ploughing to expose pupae to sun and predators",
+      "Install pheromone traps (FAW lure) at 5 per acre",
+      "Encourage natural enemies by reducing broad-spectrum sprays"
+    ],
+    "organic_solutions": [
+      "Apply sand + ash mixture (9:1) into the whorl as a mechanical barrier",
+      "Spray neem seed kernel extract 5% in the whorl",
+      "Release Trichogramma chilonis @ 50,000 per acre",
+      "Bacillus thuringiensis (Bt) @ 1 g/litre directed into whorls"
+    ],
+    "chemical_treatments": [
+      "Spinetoram 11.7 SC @ 0.5 ml/litre directed into whorl",
+      "Chlorantraniliprole 18.5 SC @ 0.4 ml/litre whorl spray",
+      "Emamectin benzoate 5 SG @ 0.4 g/litre when threshold (10% damaged whorls)",
+      "Avoid spraying during silking to protect pollinators"
+    ],
+    "irrigation_advice": [
+      "Avoid water stress during vegetative phase; stressed maize attracts more larvae",
+      "Irrigate adequately to support recovery after damage",
+      "Do not flood-irrigate immediately after granular treatment to preserve activity"
+    ],
+    "emergency_actions": [
+      "Spot-treat infected whorls within 24-48 hours of detection",
+      "Hand-pick large larvae and destroy egg masses",
+      "Coordinate with block agriculture department for area-wide spray window",
+      "Activate community FAW monitoring teams"
+    ],
     "treatment": {
       "organic": "Handpick larvae + neem",
       "chemical": "Spinosad as per label",
       "timing": "Early morning/evening"
-    }
+    },
+    "symptoms": "Leaf scraping, ragged holes"
   }
 }
-

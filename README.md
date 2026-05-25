@@ -94,6 +94,31 @@ python web_app.py
 
 Then open: `http://127.0.0.1:5000`
 
+### Government-grade portal (No-Node, CDN-based)
+
+The production-style **Bihar Agriculture 4.0** web experience is served by the **FastAPI** app (Python-only) and is mounted at **`/portal/`**.
+
+1. Run the API server:
+
+```bash
+cd bihar-agriculture-platform\backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn src.main:app --reload --host 127.0.0.1 --port 8001
+```
+
+2. Open the portal UI in a browser (**do not double‑click the HTML file — use the server URL**):
+
+- **`http://127.0.0.1:8001/`** (redirects to the portal)
+- Or directly: `http://127.0.0.1:8001/portal/`
+
+Portal files live in `bihar-agriculture-platform/backend/src/web/` and use CDNs for Tailwind + charts.
+
+- API base: `http://127.0.0.1:8001/api/v1/...`
+
+Key endpoints used by the portal include `POST /api/v1/market/predict`, `GET /api/v1/market/crops`, `GET /api/v1/market/mandis`, `POST /api/v1/pest/check-risk`, `POST /api/v1/crop/recommend`, `POST /api/v1/support/create-ticket`, and `GET /api/v1/support/faqs`.
+
 ## Troubleshooting
 - If Streamlit says model files are missing:
   - Run `python train_model.py` first to create `crop_model.pkl` and `soil_encoder.pkl`.

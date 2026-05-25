@@ -64,3 +64,18 @@ class BiharZone(Base):
     districts: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)  # portable (sqlite/postgres)
     characteristics: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
+
+class SupportTicket(Base):
+    __tablename__ = "support_tickets"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    ticket_number: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    category: Mapped[str] = mapped_column(String(50), nullable=False)
+    message: Mapped[str] = mapped_column(String(4000), nullable=False)
+    screenshot_filename: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="open")
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
+

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Market Intelligence • Bihar Agriculture 4.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { colors: { gov: { navy: \"#003087\", saffron: \"#FF9933\", green: \"#138808\" } }, borderRadius:{gov:\"12px\"} } } };
+    </script>
+    <link rel="stylesheet" href="./assets/styles.css?v=5" />
+  </head>
+  <body class="min-h-screen" data-page="market">
+    <div id="toastHost" class="toast"></div>
+
+    <header class="bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <a href="./index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gov-navy text-white grid place-items-center font-extrabold">BA</div>
+          <div class="leading-tight">
+            <div class="font-extrabold text-slate-900">Bihar Agriculture 4.0</div>
+            <div class="text-xs text-slate-600">Smart Farming Intelligence Platform</div>
+          </div>
+        </a>
+        <div class="flex items-center gap-2">
+          <button id="langBtn" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">हिं</button>
+          <a href="./support.html" class="px-3 py-2 rounded-lg bg-gov-navy text-white hover:brightness-105 font-semibold" data-i18n="nav.support">Support</a>
+        </div>
+      </div>
+      <nav class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center gap-4 py-2 text-sm" data-nav-root>
+          <a data-nav href="./index.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.home">Home</a>
+          <a data-nav href="./market.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.market">Market Intelligence</a>
+          <a data-nav href="./pest.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.pest">Pest Warning</a>
+          <a data-nav href="./crop.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.crop">Crop Recommendation</a>
+          <a data-nav href="./analytics.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.analytics">Analytics</a>
+          <a data-nav href="./reports.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.reports">Reports</a>
+          <a data-nav href="./monitoring.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.monitoring">Monitoring</a>
+          <a data-nav href="./services.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.services">Services</a>
+          <a data-nav href="./alerts.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.alerts">Alerts</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Market module</div>
+          <h1 class="mt-1 text-3xl font-extrabold text-slate-900" data-i18n="nav.market">Market Intelligence</h1>
+          <p class="mt-2 text-slate-600 max-w-2xl">Price forecasts and selling windows with confidence band visualization.</p>
+        </div>
+        <div class="gov-card px-4 py-3">
+          <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Current price</div>
+          <div class="text-2xl font-extrabold text-slate-900" id="curPrice">—</div>
+        </div>
+      </div>
+
+      <section class="mt-6 grid lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-4 gov-card p-6">
+          <div class="font-extrabold text-slate-900">Forecast request</div>
+          <div class="mt-4 grid gap-3">
+            <label class="text-sm font-bold text-slate-700">Crop</label>
+            <select id="cropSel" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-gov-navy"></select>
+            <label class="text-sm font-bold text-slate-700">Mandi</label>
+            <select id="mandiSel" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-gov-navy"></select>
+            <label class="text-sm font-bold text-slate-700">Quantity (quintals)</label>
+            <input id="qty" type="number" value="10" min="1" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-gov-navy" />
+            <button id="marketBtn" class="mt-2 px-4 py-3 rounded-xl bg-gov-navy text-white font-extrabold hover:brightness-105">Generate forecast</button>
+          </div>
+
+          <div class="mt-6 border-t border-slate-200 pt-5">
+            <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Recommended sell window</div>
+            <div class="mt-1 text-lg font-extrabold text-slate-900" id="bestDate">—</div>
+            <div class="mt-2 text-sm text-slate-600">Export the chart via the toolbar on the right.</div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-8 gov-card p-6">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="font-extrabold text-slate-900">30-day price forecast</div>
+              <div class="text-sm text-slate-600">Interactive line chart (zoom, pan, download).</div>
+            </div>
+            <a href="./reports.html" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">Open reports</a>
+          </div>
+          <div class="mt-4">
+            <div id="marketForecast" class="min-h-[340px]">
+              <div class="h-[340px] rounded-xl skeleton"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <a id="supportFab" class="fab" href="./support.html" aria-label="Support"><span class="font-extrabold text-lg">?</span></a>
+    <div id="supportPanel" class="support-panel">
+      <div class="gov-card p-5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="font-extrabold text-slate-900" data-i18n="support.title">Citizen Assistance</div>
+            <div class="text-sm text-slate-600">Phone: 1800-XXX-XXXX • WhatsApp: +91-XXXXXXXXXX</div>
+          </div>
+          <button id="supportClose" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">Close</button>
+        </div>
+        <div class="mt-4">
+          <input class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-gov-navy" data-i18n-placeholder="support.search" placeholder="How can we help you?" />
+        </div>
+        <div class="mt-4 grid gap-2 text-sm">
+          <a class="px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold" href="./support.html">Create a ticket</a>
+          <a class="px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold" href="./faq.html">Search FAQs</a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-slate-600 flex flex-wrap gap-2 justify-between" data-footer-root>
+        <div>© 2026 Government of Bihar • Agriculture Department</div>
+        <div class="flex gap-3" data-footer-links>
+          <a class="hover:text-slate-900 font-semibold" href="./about.html">About</a>
+          <a class="hover:text-slate-900 font-semibold" href="./contact.html">Contact</a>
+          <a class="hover:text-slate-900 font-semibold" href="./support.html">Support</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="./assets/app.js?v=9"></script>
+  </body>
+</html>
+
