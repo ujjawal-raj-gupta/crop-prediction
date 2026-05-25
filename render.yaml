@@ -4,9 +4,22 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt && python train_model.py
-    startCommand: gunicorn web_app:app
+    startCommand: gunicorn web_app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: DATABASE_PATH
         value: /tmp/smart_crop.db
+
+  - type: web
+    name: bihar-agriculture-portal
+    env: python
+    plan: free
+    rootDir: bihar-agriculture-platform/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9

@@ -154,6 +154,12 @@ def parse_int(form: dict, key: str, default: int) -> int:
         return default
 
 
+@app.get("/health")
+def health():
+    """Used by Render (and local checks) to confirm the service is up."""
+    return jsonify({"status": "healthy"})
+
+
 @app.get("/")
 def index_get():
     # Default city -> auto weather
