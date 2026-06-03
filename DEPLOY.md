@@ -28,6 +28,7 @@ Your code is on GitHub. Render will host it and give you URLs like:
 - **Free plan**: services sleep after ~15 min idle; first visit may take 30–60s to wake up.
 - **No secrets required** for basic crop prediction + weather (Open-Meteo).
 - Twilio/SMS env vars are optional (only if you use notification features).
+- **Bihar portal** includes crop recommendations, mandi prices, forecast-based **irrigation plans** (acres + Open-Meteo), and pest warnings. USB NPK sensor only works locally (not on Render).
 
 ## After deploy
 

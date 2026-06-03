@@ -47,4 +47,5 @@ class CropRecommendRequest(BaseModel):
     ph: float
     season: str
     district: str | None = None
+    land_acres: float = Field(default=1.0, ge=0.1, le=100.0)
 

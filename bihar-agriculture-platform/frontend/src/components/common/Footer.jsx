@@ -25,7 +25,6 @@ export default function Footer() {
             <li><Link to="/market"   className="text-slate-700 hover:text-gov-primary font-semibold">Market intelligence</Link></li>
             <li><Link to="/pest-warning" className="text-slate-700 hover:text-gov-primary font-semibold">Pest warning</Link></li>
             <li><Link to="/crop-recommendation" className="text-slate-700 hover:text-gov-primary font-semibold">Crop recommendation</Link></li>
-            <li><Link to="/analytics" className="text-slate-700 hover:text-gov-primary font-semibold">Analytics</Link></li>
           </ul>
         </div>
 

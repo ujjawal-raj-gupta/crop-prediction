@@ -1,23 +1,26 @@
 crop,demand_level,price_per_kg,buyer_type,buyer_location
-rice,Medium,22,Government procurement (MSP),All districts Bihar
-maize,High,18,Poultry feed industry,Muzaffarpur and Patna
-chickpea,Medium,65,Dal mills and traders,Patna
-lentil,Medium,70,Dal mills,Patna and Mokama
-jute,Low,30,Jute mills,Purnea and Katihar
-banana,High,25,Fruit wholesalers,Patna and Hajipur
-mango,High,40,Fruit traders,Muzaffarpur and Bhagalpur
-pomegranate,Medium,80,Premium fruit traders,Urban Bihar markets
-watermelon,Medium,15,Seasonal fruit traders,Local mandis
-cotton,Low,60,Textile traders,Outside Bihar markets
-blackgram,Medium,75,Dal mills,Bihar markets
-mungbean,Medium,85,Pulse traders,Patna
-pigeonpeas,Medium,68,Dal mills and traders,Bihar markets
-mothbeans,Low,50,Local traders,Limited Bihar markets
-kidneybeans,Medium,90,Urban wholesale markets,Patna
-coffee,Low,120,Specialty traders,Outside Bihar markets
-coconut,Low,35,Wholesale traders,Imported supply chains
-grapes,Medium,60,Fruit wholesalers,Urban Bihar markets
-apple,Medium,120,Cold storage traders,Urban Bihar markets
-orange,Medium,50,Fruit traders,Bihar markets
-papaya,High,20,Local fruit vendors,Patna and nearby towns
-muskmelon,Medium,18,Seasonal traders,Local mandis
+rice,Medium,22,Government procurement (PACS/FCI),Patna · Hajipur · Darbhanga · Samastipur
+maize,High,19,Poultry feed companies (Venkateshwara etc.),Purnea · Katihar · Muzaffarpur
+chickpea,Medium,62,Dal mills and wholesale traders,Patna (Mithapur) · Gaya · Aurangabad
+lentil,High,68,Dal mills + export traders,Mokama (Patna dist.) · Patna Mithapur · Jehanabad
+jute,Low,34,Jute mills + JCI depot,Purnea · Katihar · Kishanganj
+banana,High,20,Fruit wholesalers (national transit hub),Hajipur (Vaishali) · Muzaffarpur
+mango,High,42,Fruit traders + export agents,Muzaffarpur · Bhagalpur · Darbhanga
+pomegranate,Medium,75,Premium fruit traders,Patna (Mithapur Mandi)
+watermelon,Medium,16,Seasonal fruit traders,Darbhanga · Patna Mithapur
+cotton,Low,55,Textile traders (UP/MP buyers visit),Patna Mithapur Mandi
+blackgram,Medium,70,Dal mills,Patna (Mithapur) · Muzaffarpur
+mungbean,High,85,Pulse traders,Patna (Mithapur) · Muzaffarpur · Hajipur
+pigeonpeas,Medium,70,Dal mills and traders,Patna (Mithapur) · Gaya · Aurangabad
+mothbeans,Low,45,Local traders (limited demand),Gaya Mandi
+kidneybeans,Medium,85,Urban wholesale markets,Patna (Mithapur Mandi)
+coffee,Low,110,Specialty traders (re-sale market),Patna Mithapur
+coconut,Low,32,Wholesale traders (imported supply),Patna Mithapur
+grapes,Medium,55,Fruit wholesalers,Patna Mithapur
+apple,Medium,110,Cold storage traders (Himachal supply),Patna Mithapur
+orange,Medium,45,Fruit traders,Muzaffarpur · Patna Mithapur
+papaya,High,18,Local fruit vendors + hotels,Patna Mithapur · Hajipur
+muskmelon,Medium,16,Seasonal traders,Darbhanga · Patna Mithapur
+mustard,High,54,Edible oil mills + MSP procurement,Patna Mithapur · Ara (Bhojpur) · Sasaram
+wheat,High,22,FCI + flour mills,Ara (Bhojpur) · Patna Mithapur · Buxar · Sasaram
+potato,Medium,11,Wholesale vegetable traders,Patna Mithapur · Muzaffarpur · Hajipur

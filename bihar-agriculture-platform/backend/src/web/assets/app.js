@@ -1,7 +1,7 @@
 /* =====================================================================
  * Bihar Agriculture 4.0 - Portal client
  * - i18n (EN/HI), nav highlighting, support FAB, toast helper
- * - Per-page initializers (home/market/pest/crop/support/faq/analytics/settings/terms)
+ * - Per-page initializers (home/market/pest/crop/support/faq/settings/terms)
  * - Pest suggestion renderer with risk-tier driven sections (LOW/MED/HIGH)
  * - Centralised Terms & Conditions acceptance (localStorage)
  * - Programmatic injection of Terms links into nav + footer so every page
@@ -20,7 +20,6 @@
       "nav.market": "Market Intelligence",
       "nav.pest": "Pest Warning",
       "nav.crop": "Crop Recommendation",
-      "nav.analytics": "Analytics",
       "nav.reports": "Reports",
       "nav.monitoring": "Monitoring",
       "nav.services": "Services",
@@ -39,7 +38,6 @@
       "nav.market": "बाजार सूचना",
       "nav.pest": "कीट चेतावनी",
       "nav.crop": "फसल सिफारिश",
-      "nav.analytics": "विश्लेषण",
       "nav.reports": "रिपोर्ट",
       "nav.monitoring": "निगरानी",
       "nav.services": "सेवाएँ",
@@ -169,32 +167,9 @@
      * submit handler can call to decide whether to proceed.
      */
     inlineGate(hostEl) {
-      if (!hostEl) return () => true;
-      if (terms.isAccepted()) {
-        hostEl.innerHTML = "";
-        return () => true;
-      }
-      hostEl.innerHTML = `
-        <label class="mt-2 flex items-start gap-3 cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <input data-terms-gate type="checkbox" class="mt-0.5 h-5 w-5 rounded border-slate-300 text-gov-navy focus:ring-2 focus:ring-gov-navy" />
-          <span class="text-xs text-slate-700 leading-snug">
-            I agree to the <a class="font-semibold text-gov-navy underline" href="./terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>
-            and the privacy notice. Required before using this advisory.
-          </span>
-        </label>
-      `;
-      const box = hostEl.querySelector("[data-terms-gate]");
-      return () => {
-        if (!box) return true;
-        if (box.checked) {
-          terms.accept();
-          hostEl.innerHTML = "";
-          return true;
-        }
-        toast("Please accept the Terms & Conditions to continue", "warning");
-        box.focus();
-        return false;
-      };
+      // Terms are auto-accepted on page load; no checkbox is ever rendered.
+      if (hostEl) hostEl.innerHTML = "";
+      return () => true;
     }
   };
 
@@ -279,7 +254,7 @@
 
   /* ---------------- MARKET -------------------------------------------- */
   async function initMarket() {
-    const crops = await json(`${API_BASE}/market/crops`).catch(() => ({ crops: ["Wheat"] }));
+    const crops = await json(`${API_BASE}/market/crops`).catch(() => ({ crops: ["Apple"] }));
     const mandis = await json(`${API_BASE}/market/mandis`).catch(() => ({ mandis: ["Patna"] }));
     const cropSel = document.getElementById("cropSel");
     const mandiSel = document.getElementById("mandiSel");
@@ -287,12 +262,37 @@
     if (mandiSel) mandiSel.innerHTML = mandis.mandis.map((m) => `<option>${m}</option>`).join("");
 
     const btn = document.getElementById("marketBtn");
+    const refreshBtn = document.getElementById("marketRefreshBtn");
+    let marketLoading = 0;
+
+    const MARKET_BTN_ICON_CHART = `<svg id="marketBtnIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>`;
+    const MARKET_BTN_ICON_SPIN = `<svg id="marketBtnIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>`;
+    const MARKET_REFRESH_ICON = `<svg id="marketRefreshIcon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>`;
+    const MARKET_REFRESH_SPIN = `<svg id="marketRefreshIcon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>`;
+
+    const setMarketLoading = (on) => {
+      marketLoading += on ? 1 : -1;
+      if (marketLoading < 0) marketLoading = 0;
+      const busy = marketLoading > 0;
+      if (btn) btn.disabled = busy;
+      if (refreshBtn) refreshBtn.disabled = busy;
+      const btnLabel = document.getElementById("marketBtnLabel");
+      const refreshLabel = document.getElementById("marketRefreshLabel");
+      const btnIcon = document.getElementById("marketBtnIcon");
+      const refreshIcon = document.getElementById("marketRefreshIcon");
+      if (btnLabel) btnLabel.textContent = busy ? "Loading…" : "Get Market Intelligence";
+      if (refreshLabel) refreshLabel.textContent = busy ? "Loading…" : "Refresh";
+      if (btnIcon) btnIcon.outerHTML = busy ? MARKET_BTN_ICON_SPIN : MARKET_BTN_ICON_CHART;
+      if (refreshIcon) refreshIcon.outerHTML = busy ? MARKET_REFRESH_SPIN : MARKET_REFRESH_ICON;
+    };
+
     const run = async () => {
       const payload = {
-        crop: cropSel?.value || "Wheat",
+        crop: cropSel?.value || "Apple",
         mandi: mandiSel?.value || "Patna",
         quantity: +(document.getElementById("qty")?.value || 10)
       };
+      setMarketLoading(true);
       try {
         const out = await json(`${API_BASE}/market/predict`, {
           method: "POST",
@@ -308,17 +308,173 @@
         document.getElementById("bestDate").textContent =
           rec.optimal_date || rec.optimal_sell_date || "—";
         renderMarketCharts(out);
-        toast(out.recommendation?.demo ? "Forecast ready (demo — ingest prices for live data)" : "Forecast generated");
+        toast(`Forecast ready for ${payload.crop} — ${payload.mandi}`);
       } catch (e) {
-        toast("Could not generate forecast", "error");
+        console.error(e);
+        toast("Could not generate forecast. Check your connection.", "error");
+      } finally {
+        setMarketLoading(false);
       }
     };
 
     btn?.addEventListener("click", run);
+    refreshBtn?.addEventListener("click", run);
 
-    setTimeout(() => {
-      if (!document.getElementById("curPrice")?.textContent?.includes("₹")) run();
-    }, 250);
+    // Auto-run on page load so users see data immediately
+    setTimeout(run, 300);
+
+    initBuyerDirectory();
+    initMandiBoard();
+  }
+
+  // ---- Mandi price board -------------------------------------------------
+
+  function priceRowClass(idx) {
+    return idx % 2 === 0 ? "bg-white" : "bg-slate-50/60";
+  }
+
+  function mandiPriceRow(r, idx) {
+    const price = r.price_per_quintal
+      ? `<span class="font-extrabold text-emerald-700">Rs ${Number(r.price_per_quintal).toLocaleString("en-IN")}</span>`
+      : "—";
+    return `
+      <tr class="${priceRowClass(idx)} hover:bg-emerald-50 transition-colors">
+        <td class="px-4 py-3 font-semibold text-slate-900 capitalize">${escapeHtml(r.crop)}</td>
+        <td class="px-4 py-3 text-slate-800">${escapeHtml(r.mandi)}</td>
+        <td class="px-4 py-3">
+          <span class="inline-block rounded-full bg-blue-50 text-blue-800 px-2.5 py-0.5 text-xs font-bold">${escapeHtml(r.district)}</span>
+        </td>
+        <td class="px-4 py-3 text-slate-700">${escapeHtml(r.buyer_type)}</td>
+        <td class="px-4 py-3 text-right">${price}</td>
+        <td class="px-4 py-3 text-slate-500 text-xs leading-snug max-w-xs">${escapeHtml(r.notes || "")}</td>
+      </tr>`;
+  }
+
+  async function initMandiBoard() {
+    const tbody = document.getElementById("mandiTableBody");
+    const cropSel = document.getElementById("mandiCropFilter");
+    const distSel = document.getElementById("mandiDistrictFilter");
+    const searchEl = document.getElementById("mandiSearch");
+    const statsEl = document.getElementById("mandiStats");
+    if (!tbody) return;
+
+    let allRows = [];
+    try {
+      const out = await json(`${API_BASE}/market/mandi-prices`);
+      allRows = out.mandi_prices || [];
+      // Populate crop filter
+      if (cropSel) {
+        (out.crops || []).forEach((c) => {
+          const o = document.createElement("option");
+          o.value = c; o.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+          cropSel.appendChild(o);
+        });
+      }
+      // Populate district filter
+      if (distSel) {
+        (out.districts || []).forEach((d) => {
+          const o = document.createElement("option");
+          o.value = d; o.textContent = d;
+          distSel.appendChild(o);
+        });
+      }
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-slate-500">Mandi data unavailable right now.</td></tr>`;
+      return;
+    }
+
+    const render = (rows) => {
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-slate-500">No mandis match your filter.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(mandiPriceRow).join("");
+      // Stats chips
+      if (statsEl) {
+        const districts = [...new Set(rows.map((r) => r.district))];
+        const crops = [...new Set(rows.map((r) => r.crop))];
+        const maxPrice = Math.max(...rows.map((r) => r.price_per_quintal || 0));
+        const maxRow = rows.find((r) => r.price_per_quintal === maxPrice);
+        statsEl.innerHTML = [
+          `<span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-800">${rows.length} mandis shown</span>`,
+          `<span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-800">${districts.length} districts</span>`,
+          `<span class="inline-flex items-center gap-1.5 rounded-full bg-violet-50 border border-violet-200 px-3 py-1.5 text-xs font-bold text-violet-800">${crops.length} crops</span>`,
+          maxRow ? `<span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-xs font-bold text-amber-800">Best price: Rs ${Number(maxPrice).toLocaleString("en-IN")}/q — ${maxRow.crop} @ ${maxRow.mandi}</span>` : ""
+        ].join("");
+      }
+    };
+
+    render(allRows);
+
+    const applyFilters = () => {
+      const q = (searchEl?.value || "").trim().toLowerCase();
+      const crop = (cropSel?.value || "").toLowerCase();
+      const dist = (distSel?.value || "").toLowerCase();
+      render(allRows.filter((r) => {
+        if (crop && r.crop.toLowerCase() !== crop) return false;
+        if (dist && r.district.toLowerCase() !== dist) return false;
+        if (q && !["crop","mandi","district","buyer_type","notes"].some((k) => String(r[k]||"").toLowerCase().includes(q))) return false;
+        return true;
+      }));
+    };
+
+    cropSel?.addEventListener("change", applyFilters);
+    distSel?.addEventListener("change", applyFilters);
+    searchEl?.addEventListener("input", applyFilters);
+  }
+
+  function demandPillClassMarket(level) {
+    const l = String(level || "").toLowerCase();
+    if (l === "high") return "bg-emerald-100 text-emerald-800";
+    if (l === "medium") return "bg-amber-100 text-amber-800";
+    if (l === "low") return "bg-rose-100 text-rose-800";
+    return "bg-slate-100 text-slate-700";
+  }
+
+  function buyerCard(b) {
+    const price = b.price_per_kg ? `Rs ${escapeHtml(String(b.price_per_kg))}/kg` : "—";
+    const demand = b.demand_level
+      ? `<span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${demandPillClassMarket(b.demand_level)}">${escapeHtml(b.demand_level)} demand</span>`
+      : "";
+    return `
+      <div class="gov-card-flat p-4 fade-in-up">
+        <div class="flex items-center justify-between gap-2">
+          <div class="font-extrabold text-slate-900 capitalize">${escapeHtml(b.crop)}</div>
+          <div class="font-extrabold text-emerald-700">${price}</div>
+        </div>
+        <div class="mt-2 text-sm font-semibold text-slate-800">${escapeHtml(b.buyer_type || "Local buyers")}</div>
+        <div class="text-sm text-slate-600">${escapeHtml(b.buyer_location || "")}</div>
+        <div class="mt-3">${demand}</div>
+      </div>`;
+  }
+
+  // "Where to sell" directory: every crop's buyers, locations, price and demand.
+  async function initBuyerDirectory() {
+    const host = document.getElementById("buyerDirectory");
+    if (!host) return;
+    let rows = [];
+    try {
+      const out = await json(`${API_BASE}/market/buyers`);
+      rows = out.buyers || [];
+    } catch (e) {
+      host.innerHTML = `<div class="gov-card p-4 text-sm text-slate-700">Buyer directory is unavailable right now.</div>`;
+      return;
+    }
+    const render = (list) => {
+      host.innerHTML = list.length
+        ? list.map(buyerCard).join("")
+        : `<div class="gov-card p-4 text-sm text-slate-700">No matching buyers.</div>`;
+    };
+    render(rows);
+
+    const search = document.getElementById("buyerSearch");
+    search?.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      if (!q) return render(rows);
+      render(rows.filter((b) =>
+        [b.crop, b.buyer_type, b.buyer_location, b.demand_level]
+          .some((v) => String(v || "").toLowerCase().includes(q))));
+    });
   }
 
   function renderMarketCharts(out) {
@@ -627,6 +783,70 @@
   }
 
   /* ---------------- CROP ---------------------------------------------- */
+  function demandPillClass(level) {
+    const l = String(level || "").toLowerCase();
+    if (l === "high") return "bg-emerald-100 text-emerald-800";
+    if (l === "medium") return "bg-amber-100 text-amber-800";
+    if (l === "low") return "bg-rose-100 text-rose-800";
+    return "bg-slate-100 text-slate-700";
+  }
+
+  // "Where to sell" block: buyer + location + price + demand from market_demand.csv.
+  function renderIrrigationPlan(plan) {
+    const host = document.getElementById("cropIrrigation");
+    if (!host) return;
+    if (!plan || !Array.isArray(plan.events) || !plan.events.length) {
+      host.classList.add("hidden");
+      host.innerHTML = "";
+      return;
+    }
+    const rows = plan.events.map((ev) => `
+      <tr>
+        <td class="py-2 pr-4 text-nowrap text-sm font-semibold text-slate-800">${escapeHtml(ev.when_local || "—")}</td>
+        <td class="py-2 text-sm text-slate-700">${escapeHtml(ev.note || "")}</td>
+      </tr>`).join("");
+    const src = plan.weather_source === "open-meteo" ? "Open-Meteo forecast" : "seasonal fallback";
+    const cropLabel = escapeHtml(plan.crop || "top crop");
+    const acres = plan.land_acres != null ? `${plan.land_acres} acres` : "your holding";
+    host.classList.remove("hidden");
+    host.innerHTML = `
+      <div class="gov-card p-5 border border-emerald-200 bg-emerald-50/40">
+        <div class="font-extrabold text-slate-900">Irrigation plan (timings)</div>
+        <p class="mt-1 text-sm text-slate-600">
+          For <span class="font-semibold text-slate-800">${cropLabel}</span> on <span class="font-semibold">${escapeHtml(acres)}</span>.
+          Scheduled in IST (${escapeHtml(plan.tz || "Asia/Kolkata")}). Weather: ${escapeHtml(src)}.
+        </p>
+        ${plan.summary ? `<p class="mt-2 text-sm text-slate-700">${escapeHtml(plan.summary)}</p>` : ""}
+        <div class="mt-3 overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200">
+                <th class="py-2 pr-4 text-xs font-bold uppercase tracking-wide text-slate-500">When</th>
+                <th class="py-2 text-xs font-bold uppercase tracking-wide text-slate-500">Action</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-xs text-slate-500">Indicative schedule from forecast and farm size — confirm with your local KVK before acting at scale.</p>
+      </div>`;
+  }
+
+  function renderSellInfo(m) {
+    if (!m || (!m.buyer_type && !m.buyer_location)) return "";
+    const price = m.price_per_kg ? `· Rs ${escapeHtml(String(m.price_per_kg))}/kg` : "";
+    const demand = m.demand_level
+      ? `<span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${demandPillClass(m.demand_level)}">${escapeHtml(m.demand_level)} demand</span>`
+      : "";
+    return `
+      <div class="mt-3 pt-3 border-t border-slate-200">
+        <div class="text-xs font-bold tracking-wide text-emerald-700 uppercase">Where to sell</div>
+        <div class="mt-1 text-sm text-slate-800 font-semibold">${escapeHtml(m.buyer_type || "Local buyers")}</div>
+        <div class="text-sm text-slate-600">${escapeHtml(m.buyer_location || "")} ${price}</div>
+        <div class="mt-2">${demand}</div>
+      </div>`;
+  }
+
   function normalizeCropApiResponse(raw) {
     const recList = raw.recommendations || [];
     if (!recList.length) return { zone: "—", recommendations: [] };
@@ -636,7 +856,8 @@
       const recommendations = recList.map((r) => ({
         crop: r.crop,
         confidence: Math.round(Number(r.confidence_pct) || 0),
-        expected_yield_quintals_acre: r.expected_yield_quintals_acre ?? r.top_farmer_yield_quintals_acre ?? r.yield_avg ?? "—"
+        expected_yield_quintals_acre: r.expected_yield_quintals_acre ?? r.top_farmer_yield_quintals_acre ?? r.yield_avg ?? "—",
+        market: r.market || null
       }));
       return { zone: zoneTitle || "—", recommendations };
     }
@@ -645,7 +866,8 @@
       recommendations: recList.map((r) => ({
         crop: r.crop,
         confidence: Math.round(Number(r.confidence) || 0),
-        expected_yield_quintals_acre: r.expected_yield_quintals_acre ?? "—"
+        expected_yield_quintals_acre: r.expected_yield_quintals_acre ?? "—",
+        market: r.market || null
       }))
     };
   }
@@ -655,7 +877,7 @@
     if (!host) return;
     const labels = recs.map((r) => r.crop);
     const values = recs.map((r) => Number(r.confidence) || 0);
-    const palette = ["#003087", "#138808", "#FF9933", "#DC3545", "#FFA500"];
+    const palette = ["#003087","#138808","#FF9933","#DC3545","#7C3AED","#0891B2","#D97706","#BE123C"];
     const barColors = labels.map((_, i) => palette[i % palette.length]);
     if (host._apexCrop) { try { host._apexCrop.destroy(); } catch {} host._apexCrop = null; }
     host.innerHTML = "";
@@ -664,7 +886,7 @@
       mount.className = "min-h-[260px]";
       host.appendChild(mount);
       host._apexCrop = new ApexCharts(mount, {
-        chart: { type: "bar", height: 300, toolbar: { show: true }, animations: { enabled: true } },
+        chart: { type: "bar", height: Math.max(300, recs.length * 52), toolbar: { show: true }, animations: { enabled: true } },
         series: [{ name: "Confidence (%)", data: values }],
         xaxis: { categories: labels, labels: { rotate: -22 } },
         plotOptions: { bar: { borderRadius: 8, columnWidth: "55%", distributed: true } },
@@ -680,7 +902,212 @@
     host.innerHTML = chartUnavailable();
   }
 
+  // Realistic agronomic bounds (mirror of soil_advisor.REALISTIC_BOUNDS on the
+  // backend) so the UI can reject implausible soil values immediately.
+  const SOIL_BOUNDS = {
+    n:  { lo: 0, hi: 155, label: "Nitrogen (N)", unit: " kg/ha" },
+    p:  { lo: 0, hi: 155, label: "Phosphorus (P)", unit: " kg/ha" },
+    k:  { lo: 0, hi: 215, label: "Potassium (K)", unit: " kg/ha" },
+    ph: { lo: 3, hi: 10, label: "pH", unit: "" }
+  };
+
+  function validateSoil(values) {
+    const issues = [];
+    for (const [key, b] of Object.entries(SOIL_BOUNDS)) {
+      const v = values[key];
+      if (v == null || Number.isNaN(v)) {
+        issues.push(`${b.label} is required and must be a number.`);
+      } else if (v < b.lo || v > b.hi) {
+        issues.push(`${b.label} = ${v}${b.unit} is outside the realistic range (${b.lo}-${b.hi}${b.unit}). Please re-check the soil test value.`);
+      }
+    }
+    return issues;
+  }
+
+  function renderCropWarnings(warnings) {
+    const list = document.getElementById("cropList");
+    document.getElementById("topCrop").textContent = "—";
+    document.getElementById("topConf").textContent = "—";
+    renderCropChart([]);
+    if (list) {
+      list.innerHTML = `
+        <div class="gov-card p-4 border-l-4 border-amber-500">
+          <div class="font-extrabold text-slate-900">Please check your soil values</div>
+          <ul class="mt-2 text-sm text-slate-700 list-disc pl-5 grid gap-1">
+            ${warnings.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}
+          </ul>
+        </div>`;
+    }
+  }
+
+  /* ---------------- NPK SENSOR (Arduino Modbus) ------------------------- */
+  const NPK_JSON_RE = /NPK_JSON:\s*(\{[^}]+\})/i;
+  let npkMgkgToKgha = 2.0;
+  let serialPort = null;
+  let serialReader = null;
+
+  function setSensorStatus(msg, isError) {
+    const el = document.getElementById("sensorStatus");
+    if (!el) return;
+    el.textContent = msg;
+    el.className = `mt-2 text-xs ${isError ? "text-rose-700 font-semibold" : "text-slate-600"}`;
+  }
+
+  function applyNpkToForm(soilNpk, rawMgkg) {
+    const nEl = document.getElementById("n");
+    const pEl = document.getElementById("p");
+    const kEl = document.getElementById("k");
+    if (nEl) nEl.value = soilNpk.n;
+    if (pEl) pEl.value = soilNpk.p;
+    if (kEl) kEl.value = soilNpk.k;
+    setSensorStatus(
+      `Loaded — raw mg/kg: N ${rawMgkg.n}, P ${rawMgkg.p}, K ${rawMgkg.k} → form kg/ha (×${npkMgkgToKgha}).`,
+      false
+    );
+    toast("NPK values updated from sensor");
+  }
+
+  function parseNpkJsonLine(line) {
+    const m = NPK_JSON_RE.exec(line) || (line.trim().startsWith("{") ? [null, line.trim()] : null);
+    if (!m) return null;
+    try {
+      const data = JSON.parse(m[1]);
+      const raw = { n: Number(data.n), p: Number(data.p), k: Number(data.k) };
+      if ([raw.n, raw.p, raw.k].some((v) => Number.isNaN(v))) return null;
+      return {
+        raw_mgkg: raw,
+        soil_npk_kgha: {
+          n: Math.round(raw.n * npkMgkgToKgha * 10) / 10,
+          p: Math.round(raw.p * npkMgkgToKgha * 10) / 10,
+          k: Math.round(raw.k * npkMgkgToKgha * 10) / 10
+        }
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  async function readNpkViaServer() {
+    setSensorStatus("Reading from sensor via server…", false);
+    try {
+      const out = await json(`${API_BASE}/sensor/read`, { method: "POST" });
+      if (!out.ok) {
+        setSensorStatus(out.error || "Sensor read failed", true);
+        toast(out.error || "Sensor read failed", "error");
+        return;
+      }
+      if (out.conversion_factor) npkMgkgToKgha = out.conversion_factor;
+      applyNpkToForm(out.soil_npk_kgha, out.raw_mgkg);
+    } catch (e) {
+      setSensorStatus("Server could not read sensor. Use USB Connect or set NPK_SERIAL_PORT.", true);
+      toast("Sensor read via server failed", "error");
+    }
+  }
+
+  async function startSerialNpkReader() {
+    if (!serialPort || !serialPort.readable) return;
+    const decoder = new TextDecoder();
+    while (serialPort.readable) {
+      serialReader = serialPort.readable.getReader();
+      try {
+        let buffer = "";
+        while (true) {
+          const { value, done } = await serialReader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split(/\r?\n/);
+          buffer = lines.pop() || "";
+          for (const line of lines) {
+            if (line.includes("NPK_ERROR")) {
+              setSensorStatus(line.trim(), true);
+              continue;
+            }
+            const parsed = parseNpkJsonLine(line);
+            if (parsed) window._lastNpkReading = parsed;
+          }
+        }
+      } catch (e) {
+        if (e.name !== "NetworkError") console.warn("serial read", e);
+      } finally {
+        serialReader.releaseLock();
+        serialReader = null;
+      }
+      break;
+    }
+  }
+
+  async function connectUsbSensor() {
+    if (!("serial" in navigator)) {
+      setSensorStatus("Web Serial not supported in this browser. Use Chrome/Edge, or click Read via server.", true);
+      return;
+    }
+    try {
+      if (serialPort) {
+        try {
+          if (serialReader) await serialReader.cancel();
+          await serialPort.close();
+        } catch { /* ignore */ }
+        serialPort = null;
+      }
+      serialPort = await navigator.serial.requestPort();
+      await serialPort.open({ baudRate: 9600 });
+      startSerialNpkReader();
+      const readBtn = document.getElementById("sensorReadBtn");
+      if (readBtn) readBtn.disabled = false;
+      setSensorStatus("USB sensor connected (9600 baud). Click Read from sensor.", false);
+      toast("NPK sensor connected");
+    } catch (e) {
+      if (e.name !== "NotFoundError") {
+        setSensorStatus(e.message || "Could not open USB port", true);
+        toast("USB connect failed", "error");
+      }
+    }
+  }
+
+  async function readUsbSensor() {
+    if (!serialPort) {
+      setSensorStatus("Connect USB sensor first.", true);
+      return;
+    }
+    setSensorStatus("Requesting reading…", false);
+    try {
+      const writer = serialPort.writable.getWriter();
+      await writer.write(new TextEncoder().encode("READ\n"));
+      writer.releaseLock();
+    } catch { /* auto mode may already stream */ }
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 200));
+      if (window._lastNpkReading) {
+        const { soil_npk_kgha, raw_mgkg } = window._lastNpkReading;
+        applyNpkToForm(soil_npk_kgha, raw_mgkg);
+        return;
+      }
+    }
+    setSensorStatus("No NPK_JSON received. Check firmware (npk_sensor_web.ino) and sensor power.", true);
+  }
+
+  function initSoilSensor() {
+    const connectBtn = document.getElementById("sensorConnectBtn");
+    const readBtn = document.getElementById("sensorReadBtn");
+    const serverBtn = document.getElementById("sensorServerBtn");
+    if (!connectBtn && !serverBtn) return;
+
+    json(`${API_BASE}/sensor/status`)
+      .then((s) => {
+        if (s.conversion_factor_mgkg_to_kgha) npkMgkgToKgha = s.conversion_factor_mgkg_to_kgha;
+        if (s.configured_port) {
+          setSensorStatus(`Server port configured: ${s.configured_port}. You can use Read via server.`, false);
+        }
+      })
+      .catch(() => {});
+
+    connectBtn?.addEventListener("click", connectUsbSensor);
+    readBtn?.addEventListener("click", readUsbSensor);
+    serverBtn?.addEventListener("click", readNpkViaServer);
+  }
+
   async function initCrop() {
+    initSoilSensor();
     const btn = document.getElementById("cropBtn");
     if (!btn) return;
     const acceptIfReady = terms.inlineGate(document.getElementById("cropTermsGate"));
@@ -696,10 +1123,17 @@
       ph: +(document.getElementById("ph")?.value || 6.8),
       soil_type: document.getElementById("soilType")?.value || "alluvial",
       season: document.getElementById("season")?.value || "rabi",
-      district: document.getElementById("district")?.value?.trim() || null
+      district: document.getElementById("district")?.value?.trim() || null,
+      land_acres: Math.min(100, Math.max(0.1, +(document.getElementById("landAcres")?.value || 1)))
     });
 
     const applyResults = (out) => {
+      // Backend rejected the inputs (or could not score them): show the reasons.
+      if (out && Array.isArray(out.warnings) && out.warnings.length) {
+        renderCropWarnings(out.warnings);
+        renderIrrigationPlan(null);
+        return;
+      }
       const normalized = normalizeCropApiResponse(out);
       const recs = (normalized.recommendations || []).slice().sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
       const list = document.getElementById("cropList");
@@ -708,6 +1142,7 @@
         document.getElementById("topConf").textContent = "—";
         document.getElementById("zone").textContent = normalized.zone || "—";
         if (list) list.innerHTML = `<div class="gov-card p-4 text-sm text-slate-700">No recommendation rows returned.</div>`;
+        renderIrrigationPlan(null);
         return;
       }
       const top = recs[0];
@@ -723,16 +1158,29 @@
               <div class="font-extrabold text-slate-900">${r.confidence}%</div>
             </div>
             <div class="mt-1 text-sm text-slate-700">Expected yield: <span class="font-semibold">${escapeHtml(String(r.expected_yield_quintals_acre ?? "—"))}</span> q/acre</div>
+            ${renderSellInfo(r.market)}
           </div>`).join("");
       }
+      renderIrrigationPlan(out.irrigation_plan);
     };
 
     const run = async () => {
       if (!acceptIfReady()) return;
+      const body = payloadFromForm();
+
+      // Client-side guard: reject implausible soil values before hitting the API.
+      const soilIssues = validateSoil({
+        n: body.soil_npk.n, p: body.soil_npk.p, k: body.soil_npk.k, ph: body.ph
+      });
+      if (soilIssues.length) {
+        renderCropWarnings(soilIssues);
+        toast("Some soil values look unrealistic — please re-check.", "warning");
+        return;
+      }
+
       try {
         btn.disabled = true;
         btn.textContent = "Generating…";
-        const body = payloadFromForm();
         let raw;
         try {
           raw = await json(`${API_BASE}/crop/recommend`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -753,60 +1201,7 @@
     };
 
     btn.addEventListener("click", run);
-    setTimeout(() => { if (terms.isAccepted() && document.getElementById("topCrop")?.textContent.trim() === "—") run(); }, 300);
-  }
-
-  /* ---------------- ANALYTICS ----------------------------------------- */
-  async function initAnalytics() {
-    const elA = document.getElementById("analyticsAdvisory");
-    const elR = document.getElementById("analyticsRisk");
-    const sub = document.getElementById("analyticsSubtitle");
-    if (!elA || !elR) return;
-    const bust = () => {
-      try { elA._line?.destroy(); } catch {}
-      try { elR._donut?.destroy(); } catch {}
-      elA._line = null; elR._donut = null;
-      elA.innerHTML = ""; elR.innerHTML = "";
-    };
-    if (!window.ApexCharts) {
-      const msg = `<div class="gov-card p-4 border-l-4 border-red-600 text-sm">Charts library unavailable.</div>`;
-      elA.innerHTML = msg; elR.innerHTML = msg; if (sub) sub.textContent = "";
-      return;
-    }
-    try {
-      bust();
-      const d = await json(`${API_BASE}/dashboard/analytics-charts`);
-      if (sub && d.subtitle) sub.textContent = d.subtitle;
-      const m1 = document.createElement("div"); elA.appendChild(m1);
-      elA._line = new ApexCharts(m1, {
-        chart: { type: "area", height: 280, toolbar: { show: true }, animations: { enabled: true }, zoom: { enabled: true } },
-        stroke: { curve: "smooth", width: 2 }, colors: ["#003087"],
-        fill: { type: "gradient", gradient: { shadeIntensity: 0.65, opacityFrom: 0.45, opacityTo: 0.06, stops: [0, 90] } },
-        series: [{ name: "Advisory consultations", data: d.advisory_volume || [] }],
-        xaxis: { categories: d.month_labels || [], labels: { rotate: -12 } },
-        dataLabels: { enabled: false },
-        yaxis: { labels: { formatter: (v) => `${Math.round(v)}` } },
-        tooltip: { y: { formatter: (v) => Number(v).toLocaleString("en-IN") } }
-      });
-      elA._line.render();
-      const rk = d.risk_distribution_pct || {};
-      const m2 = document.createElement("div"); elR.appendChild(m2);
-      elR._donut = new ApexCharts(m2, {
-        chart: { type: "donut", height: 290, animations: { enabled: true }, toolbar: { show: false } },
-        labels: ["Low risk", "Medium risk", "High risk"],
-        series: [rk.low ?? 58, rk.medium ?? 28, rk.high ?? 14],
-        colors: ["#138808", "#FFA500", "#DC3545"],
-        legend: { position: "bottom" },
-        plotOptions: { pie: { donut: { size: "72%", labels: { show: true, total: { show: true, label: "Total", formatter: () => `${(Number(rk.low) + Number(rk.medium) + Number(rk.high)).toFixed(0)}%` } } } } },
-        dataLabels: { enabled: false }
-      });
-      elR._donut.render();
-    } catch (e) {
-      console.error(e);
-      bust();
-      const err = `<div class="gov-card p-4 border-l-4 border-red-600 text-sm">Could not load analytics. Confirm API <span class="font-mono">/api/v1/dashboard/analytics-charts</span>.</div>`;
-      elA.innerHTML = err; elR.innerHTML = err; if (sub) sub.textContent = "";
-    }
+    setTimeout(run, 400); // auto-run on page load
   }
 
   /* ---------------- FAQ ----------------------------------------------- */
@@ -872,6 +1267,10 @@
 
   /* ---------------- bootstrap ----------------------------------------- */
   document.addEventListener("DOMContentLoaded", async () => {
+    // Auto-accept terms on load so farmers are never blocked by a legal gate.
+    // The full terms page is still linked in the footer for transparency.
+    if (!terms.isAccepted()) terms.accept();
+
     injectTermsLink();          // run BEFORE translations so labels apply
     applyTranslations();
     activeNav();
@@ -886,7 +1285,6 @@
     if (page === "support") initSupport();
     if (page === "crop") initCrop();
     if (page === "faq") initFaq();
-    if (page === "analytics") initAnalytics();
     if (page === "settings") initSettings();
     if (page === "terms") initTerms();
   });

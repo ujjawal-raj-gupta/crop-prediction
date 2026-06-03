@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import {
-  BarChart3, Bell, Bug, FileText, HelpCircle, Home, Settings, Sprout,
+  Bell, Bug, FileText, HelpCircle, Home, Settings, Sprout,
   TrendingUp, Activity, Layers, ScrollText
 } from "lucide-react";
 import { useLanguage } from "../../context/LanguageContext.jsx";
@@ -10,7 +10,6 @@ const items = [
   { to: "/market", icon: TrendingUp, key: "nav.market" },
   { to: "/pest-warning", icon: Bug, key: "nav.pest" },
   { to: "/crop-recommendation", icon: Sprout, key: "nav.crop" },
-  { to: "/analytics", icon: BarChart3, key: "nav.analytics" },
   { to: "/reports", icon: FileText, key: "nav.reports" },
   { to: "/monitoring", icon: Activity, key: "nav.monitoring" },
   { to: "/services", icon: Layers, key: "nav.services" },

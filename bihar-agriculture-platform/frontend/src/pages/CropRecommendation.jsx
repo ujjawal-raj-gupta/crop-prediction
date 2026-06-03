@@ -32,10 +32,15 @@ export default function CropRecommendation() {
     onError: (e) => toast.error(e.message)
   });
 
-  const rows = (mutation.data?.recommendations || []).map((r) => ({
+  const recommendations = mutation.data?.recommendations || [];
+  const rows = recommendations.map((r) => ({
     name: r.crop,
     confidence: r.confidence
   }));
+  const sellable = recommendations.filter((r) => r.market && (r.market.buyer_type || r.market.buyer_location));
+
+  const upgrades = mutation.data?.upgrade_suggestions || [];
+  const warnings = mutation.data?.warnings || [];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
@@ -118,6 +123,17 @@ export default function CropRecommendation() {
           </div>
         </div>
 
+        {warnings.length > 0 && (
+          <div className="rounded-xl2 bg-amber-50 border border-amber-300 shadow-soft p-6">
+            <div className="font-bold text-amber-800">Please check your soil values</div>
+            <ul className="mt-2 text-sm text-amber-900 list-disc pl-5 space-y-1">
+              {warnings.map((w, i) => (
+                <li key={i}>{w}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="rounded-xl2 bg-white border border-gov-border shadow-soft p-6">
           <div className="font-bold text-slate-900">Suitability scores</div>
           <div className="text-sm text-slate-600 mt-1">Top crops by confidence</div>
@@ -133,8 +149,83 @@ export default function CropRecommendation() {
             </ResponsiveContainer>
           </div>
         </div>
+
+        {sellable.length > 0 && (
+          <div className="rounded-xl2 bg-white border border-gov-border shadow-soft p-6">
+            <div className="font-bold text-slate-900">Where to sell your produce</div>
+            <div className="text-sm text-slate-600 mt-1">
+              Suggested buyers and markets for each recommended crop.
+            </div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {sellable.map((r) => (
+                <div key={r.crop} className="rounded-xl border border-gov-border p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-slate-900 capitalize">{r.crop}</div>
+                    <DemandBadge level={r.market.demand_level} />
+                  </div>
+                  <div className="text-xs font-bold tracking-wide text-emerald-700 uppercase mt-3">Where to sell</div>
+                  <div className="text-sm font-semibold text-slate-800 mt-1">{r.market.buyer_type || "Local buyers"}</div>
+                  <div className="text-sm text-slate-600">{r.market.buyer_location}</div>
+                  {r.market.price_per_kg && (
+                    <div className="text-xs text-slate-600 mt-2 flex justify-between">
+                      <span>Price/kg</span>
+                      <span className="font-semibold text-slate-800">Rs {r.market.price_per_kg}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {upgrades.length > 0 && (
+          <div className="rounded-xl2 bg-white border border-gov-border shadow-soft p-6">
+            <div className="font-bold text-slate-900">Unlock more crops by improving your soil</div>
+            <div className="text-sm text-slate-600 mt-1">
+              High-value crops your soil is almost ready for - each is short by just one fixable factor.
+            </div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {upgrades.map((s) => (
+                <div key={s.crop} className="rounded-xl border border-gov-border p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-slate-900 capitalize">{s.crop}</div>
+                    <DemandBadge level={s.demand_level} />
+                  </div>
+                  <div className="text-xs text-slate-600 mt-2 flex justify-between">
+                    <span>Price/kg</span>
+                    <span className="font-semibold text-slate-800">{s.price_per_kg}</span>
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1 flex justify-between">
+                    <span>{s.blocking_param} now</span>
+                    <span className="font-semibold text-slate-800">
+                      {s.current_value} → target ~{s.target_value}
+                    </span>
+                  </div>
+                  <div className="text-sm text-slate-700 mt-2">{s.action_text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
     </div>
+  );
+}
+
+function DemandBadge({ level }) {
+  const l = String(level || "").toLowerCase();
+  const cls =
+    l === "high"
+      ? "bg-green-100 text-green-700"
+      : l === "medium"
+      ? "bg-amber-100 text-amber-700"
+      : l === "low"
+      ? "bg-red-100 text-red-700"
+      : "bg-slate-100 text-slate-600";
+  return (
+    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${cls}`}>
+      {level || "N/A"} demand
+    </span>
   );
 }
 

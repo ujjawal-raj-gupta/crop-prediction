@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pest Warning • Bihar Agriculture 4.0</title>
+    <title>Pest Warning � Bihar Agriculture 4.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -11,9 +11,10 @@
     <script>
       tailwind.config = { theme: { extend: { colors: { gov: { navy: "#003087", saffron: "#FF9933", green: "#138808" } }, borderRadius:{gov:"12px"} } } };
     </script>
-    <link rel="stylesheet" href="./assets/styles.css?v=5" />
+    <link rel="stylesheet" href="./assets/styles.css?v=7" />
   </head>
   <body class="min-h-screen" data-page="pest">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div id="toastHost" class="toast"></div>
 
     <header class="bg-white border-b border-slate-200">
@@ -26,7 +27,7 @@
           </div>
         </a>
         <div class="flex items-center gap-2">
-          <button id="langBtn" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">हिं</button>
+          <button id="langBtn" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">???</button>
           <a href="./support.html" class="btn btn-primary" data-i18n="nav.support">Support</a>
         </div>
       </div>
@@ -36,7 +37,6 @@
           <a data-nav href="./market.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.market">Market Intelligence</a>
           <a data-nav href="./pest.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.pest">Pest Warning</a>
           <a data-nav href="./crop.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.crop">Crop Recommendation</a>
-          <a data-nav href="./analytics.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.analytics">Analytics</a>
           <a data-nav href="./reports.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.reports">Reports</a>
           <a data-nav href="./monitoring.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.monitoring">Monitoring</a>
           <a data-nav href="./services.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.services">Services</a>
@@ -45,7 +45,7 @@
       </nav>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main id="main-content" class="max-w-7xl mx-auto px-4 py-8">
       <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Advisory module</div>
@@ -111,7 +111,7 @@
               </div>
               <div class="flex items-center gap-2">
                 <span id="riskPill" class="sev-pill sev-low">UNKNOWN</span>
-                <span id="riskScore" class="text-sm font-bold text-slate-700">— / 100</span>
+                <span id="riskScore" class="text-sm font-bold text-slate-700">� / 100</span>
               </div>
             </div>
 
@@ -124,11 +124,11 @@
                 <div class="grid sm:grid-cols-2 gap-3" id="weatherSummary">
                   <div class="gov-card-flat p-4 bg-slate-50">
                     <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Avg temperature (3d)</div>
-                    <div class="mt-1 text-xl font-extrabold text-slate-900" id="wxTemp">—</div>
+                    <div class="mt-1 text-xl font-extrabold text-slate-900" id="wxTemp">�</div>
                   </div>
                   <div class="gov-card-flat p-4 bg-slate-50">
                     <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Avg humidity (3d)</div>
-                    <div class="mt-1 text-xl font-extrabold text-slate-900" id="wxHum">—</div>
+                    <div class="mt-1 text-xl font-extrabold text-slate-900" id="wxHum">�</div>
                   </div>
                 </div>
 
@@ -151,7 +151,7 @@
             <div class="flex items-start gap-3">
               <span class="pulse-dot mt-1"></span>
               <div class="flex-1">
-                <div class="font-extrabold text-slate-900">URGENT — high pest pressure detected</div>
+                <div class="font-extrabold text-slate-900">URGENT � high pest pressure detected</div>
                 <div class="text-sm text-slate-700 mt-1">Follow the highlighted emergency actions in the cards below within 24-48 hours. Coordinate with neighbours for area-wide effectiveness.</div>
               </div>
               <a href="./support.html" class="btn btn-danger shrink-0">Call helpdesk</a>
@@ -169,7 +169,7 @@
             </div>
             <div id="threatList" class="mt-5 grid gap-3">
               <div class="gov-card-flat p-6 text-center">
-                <div class="text-3xl">🌾</div>
+                <div class="text-3xl">??</div>
                 <div class="mt-2 font-extrabold text-slate-900">Awaiting your first check</div>
                 <div class="text-sm text-slate-600">Fill in the form on the left and press <span class="font-semibold">Assess risk</span> to see KB-driven suggestions.</div>
               </div>
@@ -191,7 +191,7 @@
         <div class="flex items-start justify-between gap-3">
           <div>
             <div class="font-extrabold text-slate-900" data-i18n="support.title">Citizen Assistance</div>
-            <div class="text-sm text-slate-600">Phone: 1800-XXX-XXXX • WhatsApp: +91-XXXXXXXXXX</div>
+            <div class="text-sm text-slate-600">Phone: 1800-XXX-XXXX � WhatsApp: +91-XXXXXXXXXX</div>
           </div>
           <button id="supportClose" class="btn btn-ghost">Close</button>
         </div>
@@ -207,7 +207,7 @@
 
     <footer class="border-t border-slate-200 bg-white">
       <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-slate-600 flex flex-wrap gap-2 justify-between" data-footer-root>
-        <div>© 2026 Government of Bihar • Agriculture Department</div>
+        <div>� 2026 Government of Bihar � Agriculture Department</div>
         <div class="flex gap-3" data-footer-links>
           <a class="hover:text-slate-900 font-semibold" href="./about.html">About</a>
           <a class="hover:text-slate-900 font-semibold" href="./contact.html">Contact</a>
@@ -218,6 +218,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="./assets/app.js?v=9"></script>
+    <script src="./assets/app.js?v=19"></script>
   </body>
 </html>

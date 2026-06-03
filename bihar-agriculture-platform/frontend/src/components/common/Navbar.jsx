@@ -9,8 +9,7 @@ const NAV = [
   { to: "/", key: "nav.home" },
   { to: "/market", key: "nav.market" },
   { to: "/pest-warning", key: "nav.pest" },
-  { to: "/crop-recommendation", key: "nav.crop" },
-  { to: "/analytics", key: "nav.analytics" }
+  { to: "/crop-recommendation", key: "nav.crop" }
 ];
 
 export default function Navbar() {

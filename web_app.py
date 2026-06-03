@@ -39,8 +39,10 @@ MODEL_PATH = PROJECT_ROOT / "crop_model.pkl"
 ENCODER_PATH = PROJECT_ROOT / "soil_encoder.pkl"
 FEATURE_COLS_PATH = PROJECT_ROOT / "feature_cols.pkl"
 MARKET_PATH = PROJECT_ROOT / "data" / "market_demand.csv"
+CROP_DATA_PATH = PROJECT_ROOT / "data" / "crop_data.csv"
 
 from features import build_model_input_row, default_feature_cols
+from soil_advisor import suggest_soil_upgrades
 
 
 app = Flask(__name__)
@@ -177,6 +179,7 @@ def index_get():
         confidence=None,
         demand_badge=None,
         irrigation_plan=None,
+        upgrade_suggestions=None,
         sms_enabled=False,
         sms_message=None,
         recent_sms=None,
@@ -224,6 +227,7 @@ def predict_post():
             confidence=None,
             demand_badge=None,
             irrigation_plan=None,
+            upgrade_suggestions=None,
             sms_enabled=sms_enabled,
             sms_message=None,
             recent_sms=list_recent_jobs_for_client(client_id=client_id) if client_id else None,
@@ -286,6 +290,18 @@ def predict_post():
         )
         sms_message = f"Scheduled {inserted} in-app SMS popup reminder(s) for click time + 2 minutes."
 
+    # Soil upgrade advisor: high-value crops the soil is almost suitable for,
+    # blocked by exactly one fixable nutrient / pH adjustment.
+    try:
+        upgrade_suggestions = suggest_soil_upgrades(
+            {"N": n, "P": p, "K": k, "ph": float(ph)},
+            crop_data_csv=CROP_DATA_PATH,
+            market_csv=MARKET_PATH,
+            exclude_crop=str(crop_pred),
+        )
+    except Exception:
+        upgrade_suggestions = []
+
     market = None
     demand_badge = None
     market_df = load_market_df()
@@ -312,6 +328,7 @@ def predict_post():
         confidence=confidence,
         demand_badge=demand_badge,
         irrigation_plan=irrigation_plan,
+        upgrade_suggestions=upgrade_suggestions,
         sms_enabled=sms_enabled,
         sms_message=sms_message,
         recent_sms=list_recent_jobs_for_client(client_id=client_id) if client_id else None,

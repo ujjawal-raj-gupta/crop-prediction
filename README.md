@@ -1,5 +1,14 @@
 # Smart Crop Advisor
 
+## In plain terms
+A farmer enters their soil test (N, P, K, pH), soil type, and location/season. The app then:
+- **Recommends the best crops** to grow for those conditions, with a confidence score.
+- **Suggests soil upgrades**: shows high-value crops your soil is *almost* good enough for, and tells you the one thing to add (e.g. "add Nitrogen via urea" or "raise pH with lime") to unlock them.
+- **Shows market insights** (price per kg, demand level, buyers) so the choice is profitable, not just possible.
+- **Adds practical advice** like an irrigation timing plan, plus pest-risk warnings in the wider portal.
+
+In one sentence: it takes a farmer's soil + location and tells them the most suitable and profitable crops to grow, and how to tweak their soil to grow even better-paying ones. Built with Bihar farmers in mind.
+
 ## Overview
 Smart Crop Advisor is a beginner-friendly Python ML + Streamlit project that recommends a suitable crop based on soil nutrients and local conditions. It is designed around the needs of **Bihar farmers**, where crop decisions are impacted by soil type, weather, and market demand.
 
@@ -117,7 +126,13 @@ Portal files live in `bihar-agriculture-platform/backend/src/web/` and use CDNs 
 
 - API base: `http://127.0.0.1:8001/api/v1/...`
 
-Key endpoints used by the portal include `POST /api/v1/market/predict`, `GET /api/v1/market/crops`, `GET /api/v1/market/mandis`, `POST /api/v1/pest/check-risk`, `POST /api/v1/crop/recommend`, `POST /api/v1/support/create-ticket`, and `GET /api/v1/support/faqs`.
+Key endpoints used by the portal include `POST /api/v1/market/predict`, `GET /api/v1/market/crops`, `GET /api/v1/market/mandis`, `POST /api/v1/pest/check-risk`, `POST /api/v1/crop/recommend`, `POST /api/v1/sensor/read`, `POST /api/v1/support/create-ticket`, and `GET /api/v1/support/faqs`.
+
+### NPK soil sensor (Arduino + RS485)
+
+Flash `hardware/npk_sensor/npk_sensor_web.ino`, connect USB, then on **Crop Recommendation** use **Connect USB sensor** → **Read from sensor**. See `hardware/npk_sensor/README.md`.
+
+**One-click (Arduino on COM3):** double-click `Start-Portal-With-Sensor.bat` — starts the backend with `NPK_SERIAL_PORT=COM3` and opens the crop page.
 
 ## Troubleshooting
 - If Streamlit says model files are missing:

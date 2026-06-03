@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart3, Bug, TrendingUp } from "lucide-react";
+import { Bug, TrendingUp } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -74,12 +74,6 @@ export default function Home() {
           desc="Early risk detection, weather fusion, advisory treatments."
           icon={<Bug className="h-6 w-6" />}
           href="/pest-warning"
-        />
-        <Feature
-          title={t("nav.analytics")}
-          desc="Trends, performance, usage dashboards, exportable insights."
-          icon={<BarChart3 className="h-6 w-6" />}
-          href="/analytics"
         />
       </section>
 

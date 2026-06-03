@@ -198,6 +198,33 @@
                   {% endif %}
                 </div>
 
+                {% if upgrade_suggestions and upgrade_suggestions|length > 0 %}
+                  <div class="market-box mt-3">
+                    <div class="market-title">Unlock more crops by improving your soil</div>
+                    <div class="text-muted small mb-2">
+                      High-value crops your soil is almost ready for - each is short by just one fixable factor.
+                    </div>
+                    {% for s in upgrade_suggestions %}
+                      <div class="border rounded p-2 mb-2">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                          <strong class="text-capitalize">{{ s.crop }}</strong>
+                          <span class="badge-pill
+                            {%- if s.demand_level|lower == 'high' %} badge-high
+                            {%- elif s.demand_level|lower == 'medium' %} badge-medium
+                            {%- elif s.demand_level|lower == 'low' %} badge-low
+                            {%- else %} badge-unknown{% endif %}">{{ s.demand_level or 'N/A' }} demand</span>
+                        </div>
+                        <div class="market-row"><span>Price per kg</span><strong>{{ s.price_per_kg }}</strong></div>
+                        <div class="market-row">
+                          <span>{{ s.blocking_param }} now</span>
+                          <strong>{{ s.current_value }} &rarr; target ~{{ s.target_value }}</strong>
+                        </div>
+                        <div class="small mt-1">{{ s.action_text }}</div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
                 {% if irrigation_plan %}
                   <div class="market-box mt-3">
                     <div class="market-title">Irrigation plan (timings)</div>

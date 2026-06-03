@@ -6,7 +6,6 @@ import Home from "./pages/Home.jsx";
 import MarketIntelligence from "./pages/MarketIntelligence.jsx";
 import PestWarning from "./pages/PestWarning.jsx";
 import CropRecommendation from "./pages/CropRecommendation.jsx";
-import Analytics from "./pages/Analytics.jsx";
 import Reports from "./pages/Reports.jsx";
 import Monitoring from "./pages/Monitoring.jsx";
 import Services from "./pages/Services.jsx";
@@ -27,7 +26,6 @@ export default function App() {
           <Route path="market" element={<MarketIntelligence />} />
           <Route path="pest-warning" element={<PestWarning />} />
           <Route path="crop-recommendation" element={<CropRecommendation />} />
-          <Route path="analytics" element={<Analytics />} />
           <Route path="reports" element={<Reports />} />
           <Route path="monitoring" element={<Monitoring />} />
           <Route path="services" element={<Services />} />

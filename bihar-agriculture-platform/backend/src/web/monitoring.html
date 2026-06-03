@@ -3,15 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Monitoring • Bihar Agriculture 4.0</title>
+    <title>Monitoring � Bihar Agriculture 4.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config={theme:{extend:{colors:{gov:{navy:"#003087",saffron:"#FF9933",green:"#138808"}},borderRadius:{gov:"12px"}}}};</script>
-    <link rel="stylesheet" href="./assets/styles.css?v=5" />
+    <link rel="stylesheet" href="./assets/styles.css?v=7" />
   </head>
   <body class="min-h-screen">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div id="toastHost" class="toast"></div>
     <header class="bg-white border-b border-slate-200">
       <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
@@ -23,7 +24,7 @@
           </div>
         </a>
         <div class="flex items-center gap-2">
-          <button id="langBtn" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">हिं</button>
+          <button id="langBtn" class="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-semibold">???</button>
           <a href="./support.html" class="px-3 py-2 rounded-lg bg-gov-navy text-white hover:brightness-105 font-semibold" data-i18n="nav.support">Support</a>
         </div>
       </div>
@@ -33,7 +34,6 @@
           <a data-nav href="./market.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.market">Market Intelligence</a>
           <a data-nav href="./pest.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.pest">Pest Warning</a>
           <a data-nav href="./crop.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.crop">Crop Recommendation</a>
-          <a data-nav href="./analytics.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.analytics">Analytics</a>
           <a data-nav href="./reports.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.reports">Reports</a>
           <a data-nav href="./monitoring.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.monitoring">Monitoring</a>
           <a data-nav href="./services.html" class="py-2 font-semibold text-slate-700 hover:text-slate-900" data-i18n="nav.services">Services</a>
@@ -42,7 +42,7 @@
       </nav>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-10">
+    <main id="main-content" class="max-w-7xl mx-auto px-4 py-10">
       <div class="gov-card p-8">
         <div class="text-xs font-bold tracking-wide text-slate-500 uppercase">Monitoring</div>
         <h1 class="mt-2 text-3xl font-extrabold text-slate-900">Monitoring</h1>
@@ -69,7 +69,7 @@
 
     <footer class="border-t border-slate-200 bg-white">
       <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-slate-600 flex flex-wrap gap-2 justify-between" data-footer-root>
-        <div>© 2026 Government of Bihar • Agriculture Department</div>
+        <div>� 2026 Government of Bihar � Agriculture Department</div>
         <div class="flex gap-3" data-footer-links>
           <a class="hover:text-slate-900 font-semibold" href="./about.html">About</a>
           <a class="hover:text-slate-900 font-semibold" href="./contact.html">Contact</a>
@@ -80,7 +80,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="./assets/app.js?v=9"></script>
+    <script src="./assets/app.js?v=19"></script>
   </body>
 </html>
 

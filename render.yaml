@@ -17,9 +17,11 @@ services:
     env: python
     plan: free
     rootDir: bihar-agriculture-platform/backend
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python -c "import sys; from pathlib import Path; r=Path('.').resolve().parents[2]; sys.path.insert(0,str(r)); import soil_advisor, irrigation_plan; print('imports OK')"
     startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: PYTHONPATH
+        value: /opt/render/project/src

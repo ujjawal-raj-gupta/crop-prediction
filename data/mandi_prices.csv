@@ -1,0 +1,70 @@
+crop,mandi,district,buyer_type,price_per_quintal,notes
+rice,Patna Mandi (Mithapur),Patna,Government procurement (PACS/MSP),2300,MSP rate; bring with soil-health card for direct payment
+rice,Hajipur Mandi,Vaishali,FCI depot + private traders,2220,FCI centre active Oct–Dec; private buyers offer 2150–2220
+rice,Darbhanga Mandi,Darbhanga,State procurement agency (BSFC),2280,Kharif paddy procurement; queue early in Nov
+rice,Samastipur Mandi,Samastipur,Rice mills (Laxmi & Sons + 4 others),2150,Mill gate purchase; extra 30 rs/q for parboiled
+rice,Motihari Mandi (Ramgarhwa),East Champaran,Government + rice millers,2200,High-volume centre; transport via NH-28
+rice,Ara Mandi,Bhojpur,Private rice mills,2100,Wholesale only; min 50 quintals
+rice,Buxar Mandi,Buxar,Rice millers + commission agents,2120,Riverside location; easy boat + road transport
+wheat,Patna Mandi (Mithapur),Patna,FCI + private flour mills,2275,MSP 2275; FCI runs Apr–Jun; bring aadhaar
+wheat,Ara Mandi,Bhojpur,Flour mills (Satna Flour Mill + others),2200,Biggest wheat hub in Bihar; road/rail connectivity
+wheat,Sasaram Mandi,Rohtas,Flour mills and traders,2190,Wheat corridor; buyers from UP also present
+wheat,Buxar Mandi,Buxar,FCI + local mills,2250,FCI active Apr–May; long queue — register online first
+wheat,Siwan Mandi,Siwan,Commission agents + mills,2180,Good road link to Gorakhpur market
+wheat,Chapra Mandi (Sonepur),Saran,Flour mills + commission agents,2160,Sonepur fair in Nov boosts rates briefly
+maize,Purnea Mandi,Purnea,Poultry feed companies (Venkateshwara + local),1950,Biggest maize hub in Bihar; buyers from WB present
+maize,Katihar Mandi,Katihar,Poultry feed + starch factories,1900,Good rail connectivity to Kolkata
+maize,Muzaffarpur Mandi,Muzaffarpur,Poultry feed traders,1850,Secondary centre; off-season rates drop to 1650
+maize,Darbhanga Mandi,Darbhanga,Local traders + poultry farms,1820,Prices vary; negotiate in groups
+maize,Araria Mandi,Araria,Poultry companies + commission agents,1870,NH-57 connectivity; easy truck access
+maize,Saharsa Mandi,Saharsa,Local traders,1780,Small centre; better to club with Purnea
+mustard,Patna Mandi (Mithapur),Patna,Edible oil mills + traders,5450,MSP 5450; state procurement active Jan–Mar
+mustard,Ara Mandi,Bhojpur,Oil mills (Ara Oil Mill + private),5300,Major oil-seed centre; quick turnaround
+mustard,Sasaram Mandi,Rohtas,Oil mills + commission agents,5200,Competitive bidding; bring sample for grading
+mustard,Motihari Mandi (Ramgarhwa),East Champaran,Oil traders from UP border,5150,UP buyers often present; negotiate in groups
+lentil,Patna Mandi (Mithapur),Patna,Dal mills (Patna Dal Mills cluster),6800,Premium for machine-cleaned; bring graded sample
+lentil,Mokama Mandi,Patna,Dal mills + export traders,7200,Famous lentil belt; highest prices in state
+lentil,Jehanabad Mandi,Jehanabad,Dal mills and traders,6500,Growing centre; fewer buyers than Mokama
+lentil,Gaya Mandi,Gaya,Dal mills + commission agents,6400,Rabi season; market active Feb–Apr
+chickpea,Patna Mandi (Mithapur),Patna,Dal mills + wholesale traders,6200,Gram processing cluster; quick settlement
+chickpea,Gaya Mandi,Gaya,Dal mills (Gaya Pulses Pvt.),6000,Good for small farmers — no minimum lot
+chickpea,Aurangabad Mandi,Aurangabad,Dal mills + local traders,5900,Secondary market; transport to Gaya for better rates
+chickpea,Nawada Mandi,Nawada,Commission agents + dal mills,5800,Small centre; often underpriced — verify before selling
+mungbean,Patna Mandi (Mithapur),Patna,Pulse traders (Govind Traders + Shree Ram),8500,Highest prices Feb–May; store if you can
+mungbean,Muzaffarpur Mandi,Muzaffarpur,Dal mills + wholesale buyers,8200,Active market; 2–3 buyers compete
+mungbean,Hajipur Mandi,Vaishali,Commission agents + dal mills,8100,Accessible; same-day payment common
+pigeonpeas,Patna Mandi (Mithapur),Patna,Dal mills (Arhar mills cluster),7200,MSP procurement occasionally available
+pigeonpeas,Gaya Mandi,Gaya,Dal mills + local traders,6900,Active Oct–Dec; check procurement notice
+pigeonpeas,Aurangabad Mandi,Aurangabad,Dal mills,6700,Prices lower but closer for south Bihar farmers
+blackgram,Patna Mandi (Mithapur),Patna,Dal mills,7000,Premium for bold variety; machine-clean advised
+blackgram,Muzaffarpur Mandi,Muzaffarpur,Dal mills + traders,6800,Active Kharif season market
+banana,Hajipur Mandi,Vaishali,Fruit wholesalers (Hajipur banana hub),2200,Hajipur is India's banana transit hub; best rates guaranteed
+banana,Muzaffarpur Mandi,Muzaffarpur,Fruit wholesalers + commission agents,1900,Secondary hub; buyers from Delhi NCR present
+banana,Patna Mandi (Mithapur),Patna,Fruit commission agents,1700,City retail demand; negotiate per bunch
+banana,Darbhanga Mandi,Darbhanga,Local fruit traders,1500,Local consumption; lower rates
+mango,Muzaffarpur Mandi,Muzaffarpur,Fruit traders (Shahi litchi exporters + mango),4500,Shahi litchi and mango cluster; export connections
+mango,Bhagalpur Mandi,Bhagalpur,Fruit traders (Bhagalpur Exports),4200,Silk city fruit market; good for Zardalu variety
+mango,Darbhanga Mandi,Darbhanga,Wholesale fruit traders,3800,Mithila region mangoes; local demand strong
+mango,Patna Mandi (Mithapur),Patna,Commission agents + retail distributors,3500,City retail price; sell here only if transport cheap
+jute,Purnea Mandi,Purnea,Jute mills (Purnea Jute Mill + agents),3500,Primary jute centre of Bihar; bulk purchase
+jute,Katihar Mandi,Katihar,Jute mills + JMDC (Jute Corp of India),3400,JCI procurement depot active Jun–Sep
+jute,Kishanganj Mandi,Kishanganj,Commission agents + jute traders,3200,Smaller volume; prices 10–15% below Purnea
+papaya,Patna Mandi (Mithapur),Patna,Local fruit vendors + hotels,1800,Perishable — same-day sale; contact agents directly
+papaya,Hajipur Mandi,Vaishali,Fruit commission agents,1600,Good for bulk; 2-day travel max
+watermelon,Darbhanga Mandi,Darbhanga,Seasonal fruit traders,1400,Summer peak Apr–Jun; prices crash after Jun
+watermelon,Patna Mandi (Mithapur),Patna,Local fruit vendors,1600,Higher retail demand in city; short shelf life
+potato,Patna Mandi (Mithapur),Patna,Wholesale vegetable traders,1200,Cold storage available at Fatuha (15 km)
+potato,Muzaffarpur Mandi,Muzaffarpur,Vegetable traders + hotels,1100,Secondary market; bulk buyers present
+potato,Hajipur Mandi,Vaishali,Wholesale traders,1150,Year-round demand; cold storage at Hajipur
+cotton,Patna Mandi (Mithapur),Patna,Textile traders (outside Bihar buyers),5500,Cotton uncommon in Bihar; buyers from UP/MP visit
+coffee,Patna Mandi (Mithapur),Patna,Specialty traders (import-reliant market),11000,Very limited local production; mostly re-sale
+coconut,Patna Mandi (Mithapur),Patna,Wholesale traders (imported from south),3200,Imported — not grown locally; listed for completeness
+grapes,Patna Mandi (Mithapur),Patna,Fruit wholesalers (mostly Nashik supply),5500,Limited local production; mostly imported from Maharashtra
+orange,Muzaffarpur Mandi,Muzaffarpur,Fruit traders,4500,Nagpur oranges re-traded here; local orange limited
+orange,Patna Mandi (Mithapur),Patna,Commission agents,4000,City retail; local Katihar orange may fetch premium
+apple,Patna Mandi (Mithapur),Patna,Cold storage traders (Himachal supply),11000,Not grown in Bihar; re-trade from north India
+mothbeans,Gaya Mandi,Gaya,Local traders,4500,Very limited demand; better to go to Patna
+kidneybeans,Patna Mandi (Mithapur),Patna,Urban wholesale markets,8500,Premium pulse; hotel and urban demand
+pomegranate,Patna Mandi (Mithapur),Patna,Premium fruit traders (urban market),7500,Maharashtra supply dominant; local premium limited
+muskmelon,Darbhanga Mandi,Darbhanga,Seasonal traders,1600,Summer peak; sell quickly — 3-day shelf life
+muskmelon,Patna Mandi (Mithapur),Patna,Local fruit vendors,1800,City retail; higher than rural mandis
