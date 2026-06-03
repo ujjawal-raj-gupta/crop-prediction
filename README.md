@@ -126,13 +126,7 @@ Portal files live in `bihar-agriculture-platform/backend/src/web/` and use CDNs 
 
 - API base: `http://127.0.0.1:8001/api/v1/...`
 
-Key endpoints used by the portal include `POST /api/v1/market/predict`, `GET /api/v1/market/crops`, `GET /api/v1/market/mandis`, `POST /api/v1/pest/check-risk`, `POST /api/v1/crop/recommend`, `POST /api/v1/sensor/read`, `POST /api/v1/support/create-ticket`, and `GET /api/v1/support/faqs`.
-
-### NPK soil sensor (Arduino + RS485)
-
-Flash `hardware/npk_sensor/npk_sensor_web.ino`, connect USB, then on **Crop Recommendation** use **Connect USB sensor** → **Read from sensor**. See `hardware/npk_sensor/README.md`.
-
-**One-click (Arduino on COM3):** double-click `Start-Portal-With-Sensor.bat` — starts the backend with `NPK_SERIAL_PORT=COM3` and opens the crop page.
+Key endpoints used by the portal include `POST /api/v1/market/predict`, `GET /api/v1/market/crops`, `GET /api/v1/market/mandis`, `POST /api/v1/pest/check-risk`, `POST /api/v1/crop/recommend`, `POST /api/v1/support/create-ticket`, and `GET /api/v1/support/faqs`.
 
 ## Troubleshooting
 - If Streamlit says model files are missing:

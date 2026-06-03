@@ -1,0 +1,22 @@
+Bihar Agriculture Portal — shareable links
+Generated: 2026-06-03
+==========================================
+
+PUBLIC LINK (share with anyone on the internet)
+  https://speed-household-kim-broker.trycloudflare.com/portal/
+
+  Important:
+  - Works only while your PC is on AND the tunnel + backend are running.
+  - This URL changes each time you restart the tunnel script.
+  - To get a new link: double-click Share-Portal-Link.bat
+
+SAME Wi-Fi (people on your home/mobile hotspot)
+  http://172.20.10.2:8001/portal/
+  (Your IP may change — run Share-Portal-Link.bat to see the current one)
+
+ONLY ON THIS COMPUTER
+  http://127.0.0.1:8001/portal/
+
+Flask crop advisor (separate app)
+  http://127.0.0.1:5000/
+  Same Wi-Fi: http://172.20.10.2:5000/

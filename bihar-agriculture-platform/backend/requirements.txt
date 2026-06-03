@@ -7,4 +7,3 @@ requests==2.32.3
 sqlalchemy==2.0.36
 pandas==2.2.3
 numpy==2.1.2
-pyserial==3.5
